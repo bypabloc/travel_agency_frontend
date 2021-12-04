@@ -1,21 +1,21 @@
 <template>
     <NavBarCustom/>
-    <!-- <div id="nav">
-        <router-link to="/">Home</router-link> |
-        <router-link to="/about">About</router-link>
+    <div class="container">
+        <LoaderViews/>
     </div>
-    <router-view/> -->
 </template>
 
 <script>
 import NavBarCustom from './components/NavBarCustom.vue'
-import HelloWorld from '@/components/HelloWorld.vue';
+import HelloWorld from '@/components/HelloWorld.vue'
+import LoaderViews from '@/components/LoaderViews.vue'
 
 export default {
     name: 'NavBar',
     components: {
         NavBarCustom,
         HelloWorld,
+        LoaderViews,
     },
 }
 </script>
