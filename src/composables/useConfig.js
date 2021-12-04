@@ -10,14 +10,15 @@ export default () => {
     // dispatch -> actions
     // commit -> mutations
 
-    console.log('useConfig',store)
+    console.log('useConfig')
 
     return {
-        getMenuItemsStatic: (e) => store.getters[`${object}/getMenuItems`] ,
         getMenuItems: computed((e) => store.getters[`${object}/getMenuItems`] ),
+        isOpenSideBar: computed((e) => store.getters[`${object}/isOpenSideBar`] ),
+        isOpenNavBar: computed((e) => store.getters[`${object}/isOpenNavBar`] ),
 
         // Methods
-        // Ex:
-        // setFetchingData: ( e ) => store.dispatch(`${object}/setFetchingData`, e ),
+        isOpenSideBarChange: () => store.dispatch(`${object}/isOpenSideBarChange`),
+        isOpenNavBarChange: () => store.dispatch(`${object}/isOpenNavBarChange`),
     }
 }

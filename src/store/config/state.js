@@ -4,4 +4,6 @@ export default {
     menu : {
         items : menu_items,
     },
+    isOpenSideBar : false,
+    isOpenNavBar : false,
 }

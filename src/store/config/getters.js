@@ -1,8 +1,11 @@
 export default {
-    fetchingData( state, ) {
-        return state.fetchingData
-    },
     getMenuItems( state, ) {
         return state.menu.items
+    },
+    isOpenSideBar( state, ) {
+        return state.isOpenSideBar
+    },
+    isOpenNavBar( state, ) {
+        return state.isOpenNavBar
     },
 }
