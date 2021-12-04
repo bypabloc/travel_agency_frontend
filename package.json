@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-      "dev": "vue-cli-service build --mode development",
-      "devw": "vue-cli-service serve --mode development --watch ",
-      "lint": "vue-cli-service lint",
-      "serve": "vue-cli-service serve",
-      "build": "vue-cli-service build"
+    "dev": "vue-cli-service build --mode development",
+    "devw": "vue-cli-service serve --mode development --watch ",
+    "lint": "vue-cli-service lint",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "bootstrap": "^5.1.3",
     "core-js": "^3.6.5",
     "vue": "^3.0.0",
