@@ -1,0 +1,162 @@
+
+@use "sass:math";
+
+$black: #262626;
+$white: #FBFBFB;
+
+$amber: #FFC107;
+$blue-gray: #607D8B;
+$blue: #2196F3;
+$brown: #795548;
+$cyan: #00BCD4;
+$deep-orange: #FF5722;
+$deep-purple: #673AB7;
+$gray: #9E9E9E;
+$green: #4CAF50;
+$indigo: #3F51B5;
+$light-blue: #03A9F4;
+$light-green: #8BC34A;
+$lime: #CDDC39;
+$orange: #FF9800;
+$pink: #E91E63;
+$pink-custom: #FF18A6;
+$primary-custom: #1FD3B2;
+$purple: #9C27B0;
+$red: #F44336;
+$teal: #26A69A;
+$yellow: #FFEB3B;
+
+$colors: (
+    "black": $black,
+    "white": $white,
+
+    "amber": $amber,
+    "blue-gray": $blue-gray,
+    "blue": $blue,
+    "brown": $brown,
+    "cyan": $cyan,
+    "deep-orange": $deep-orange,
+    "deep-purple": $deep-purple,
+    "gray": $gray,
+    "green": $green,
+    "indigo": $indigo,
+    "light-blue": $light-blue,
+    "light-green": $light-green,
+    "lime": $lime,
+    "orange": $orange,
+    "pink": $pink,
+    "pink-custom": $pink-custom,
+    "purple": $purple,
+    "red": $red,
+    "teal": $teal,
+    "yellow": $yellow,
+    
+    "primary-custom": $primary-custom,
+);
+
+@function tint($color, $percentage) {
+    @return mix($white, $color, $percentage);
+}
+@function shade($color, $percentage) {
+    @return mix($black, $color, $percentage);
+}
+
+// function extrated from https://stackoverflow.com/a/62880368
+@mixin recolor($color: #000, $opacity: 1) {
+    $r: math.div(red($color), 255);
+    $g: math.div(green($color), 255);
+    $b: math.div(blue($color), 255);
+    $a: $opacity;
+  
+    // grayscale fallback if SVG from data url is not supported
+    $lightness: lightness($color);
+    filter: saturate(0%) brightness(0%) invert($lightness) opacity($opacity);
+  
+    // color filter
+    $svg-filter-id: "recolor";
+    filter: url('data:image/svg+xml;utf8,\
+      <svg xmlns="http://www.w3.org/2000/svg">\
+        <filter id="#{$svg-filter-id}" color-interpolation-filters="sRGB">\
+          <feColorMatrix type="matrix" values="\
+            0 0 0 0 #{$r}\
+            0 0 0 0 #{$g}\
+            0 0 0 0 #{$b}\
+            0 0 0 #{$a} 0\
+          "/>\
+        </filter>\
+      </svg>\
+      ##{$svg-filter-id}');
+}
+
+@mixin make-color-classes( $color_name, $color ){
+
+    $swatch_variations: (90, 80, 70, 60, 50, 40, 30, 20, 10, 0, -10, -20, -30, -40, -50, -60, -70, -80, -90);
+
+    $i: 0.5;
+    @each $variation in $swatch_variations {
+
+        $color_number: $i * 100;
+        $swatch_color: '';
+        
+        @if ($variation > 0){
+            $swatch_color: tint($color,$variation);
+        }@else if ($variation < 0) {
+            $swatch_color: shade($color,($variation*-1));
+        }@else{
+            $color_number: 500;
+            $swatch_color: $color;
+        }
+
+        .theme-#{$color_name}-#{$color_number} {
+            color: color-contrast($swatch_color);
+            background-color: $swatch_color;
+        }
+        // .theme-#{$color_name}-#{$color_number} {
+        //     color: color-contrast($swatch_color);
+        // }
+        .theme-#{$color_name}-#{$color_number}:link {
+            color: color-contrast($swatch_color);
+            font-weight: bold;
+        }
+        .theme-#{$color_name}-#{$color_number}:visited {
+            color: color-contrast($swatch_color);
+        }
+        .theme-#{$color_name}-#{$color_number}:hover {
+            color: color-contrast($swatch_color);
+        }
+        .theme-#{$color_name}-#{$color_number}:active {
+            color: color-contrast($swatch_color);
+        }
+
+        .theme-border-#{$color_name}-#{$color_number} {
+            border: 6px solid $swatch_color !important;
+        }
+
+        .theme-bg-#{$color_name}-#{$color_number} {
+            background-color: $swatch_color;
+        }
+
+        .theme-color-#{$color_name}-#{$color_number} {
+            color: $swatch_color;
+            @include recolor($swatch_color, 1);
+        }
+        .theme-color-#{$color_name}-#{$color_number}:link {
+            color: $swatch_color;
+        }
+        .theme-color-#{$color_name}-#{$color_number}:visited {
+            color: $swatch_color;
+        }
+        .theme-color-#{$color_name}-#{$color_number}:hover {
+            color: $swatch_color;
+        }
+        .theme-color-#{$color_name}-#{$color_number}:active {
+            color: $swatch_color;
+        }
+
+        $i: $i + 0.5;
+    } 
+}
+
+@each $color_name, $color in $colors {
+    @include make-color-classes($color_name, $color);
+}
