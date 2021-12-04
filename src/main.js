@@ -4,5 +4,6 @@ import router from './router'
 import store from './store'
 
 import "./sass/app.scss"
+import "bootstrap"
 
 createApp(App).use(store).use(router).mount('#app')
