@@ -12,16 +12,36 @@
             <li>
                 <a href="#">About</a>
             </li>
+            <li v-for="(item, index) in menu" :key="index"
+                :class="
+                {
+                    'active': path == item.path,
+                }
+                "
+                >
+                <template v-if="item.isActive">
+                    <router-link :to="item.path" class="" active-class="active">{{item.text}}</router-link>
+                    <hr class="dropdown-divider" v-if="item.divider">
+                </template>
+            </li>
         </ul>
     </nav>
 </template>
 
 <script>
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 import useConfig from '@/composables/useConfig'
 
 export default {
     name: 'SideBarCustom',
     setup(props, ctx) {
+
+        const route = useRoute();
+
+        const path = computed(() =>route.path)
+
+        console.log('path', path)
 
         const {
             getMenuItems: menu,
@@ -33,6 +53,7 @@ export default {
 
         return {
             menu,
+            path,
             isOpenSideBarChange,
             isOpenNavBarChange,
             isOpenSideBar,

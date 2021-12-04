@@ -57,7 +57,6 @@ export default {
     setup() {
 
         const {
-            getMenuItems: menu,
             isOpenSideBarChange,
             isOpenNavBarChange,
             isOpenSideBar,
@@ -65,7 +64,6 @@ export default {
         } = useConfig()
 
         return {
-            menu,
             isOpenSideBarChange,
             isOpenNavBarChange,
             isOpenSideBar,
@@ -92,14 +90,7 @@ export default {
 }
 
 .navbar-button-hide {
-    display: none;
-}
-
-.line {
-    width: 100%;
-    height: 1px;
-    border-bottom: 1px dashed #ddd;
-    margin: 40px 0;
+    display: none !important;
 }
 
 .dropdown-toggle::after {
