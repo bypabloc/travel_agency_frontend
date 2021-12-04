@@ -5,13 +5,14 @@
         }
         ">
         <div class="sidebar-header">
-            <h3>Travel Agency</h3>
+            <h3>
+                <router-link to="/" class="">
+                    <img src="/icon.png" alt="logo" class="img-fluid"> Travel Agency
+                </router-link>
+            </h3>
         </div>
 
         <ul class="list-unstyled components">
-            <li>
-                <a href="#">About</a>
-            </li>
             <li v-for="(item, index) in menu" :key="index"
                 :class="
                 {
@@ -102,7 +103,7 @@ a[data-toggle="collapse"] {
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #47748b;
+    /* border-bottom: 1px solid #47748b; */
 }
 
 #sidebar ul p {
