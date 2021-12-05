@@ -81,7 +81,6 @@
                     :errors="formValuesErrors.year"
                 />
             </div>
-            {{ formValues }}
         </template>
         <template 
             v-slot:actions
@@ -149,7 +148,7 @@ export default {
             brand: yup.string().required().min(3).max(50),
             model: yup.string().required().min(3).max(50),
             serial: yup.string().required().min(3).max(100),
-            year: yup.number().required().min(1900).max(new Date().getFullYear()),
+            year: yup.number().required().min(1900).max(new Date().getFullYear() + 1),
             is_active: yup.boolean(),
         });
 
