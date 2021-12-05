@@ -1,0 +1,9 @@
+export const route = 'bus';
+
+export const FETCH_REQUEST = 'FETCH_REQUEST';
+export const FETCH_SUCCESS = 'FETCH_SUCCESS';
+export const FETCH_FAILURE = 'FETCH_FAILURE';
+
+export const LIST_FETCH_REQUEST = 'LIST_FETCH_REQUEST';
+export const LIST_FETCH_SUCCESS = 'LIST_FETCH_SUCCESS';
+export const LIST_FETCH_FAILURE = 'LIST_FETCH_FAILURE';
