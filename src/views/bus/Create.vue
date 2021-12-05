@@ -29,7 +29,7 @@
             <div class="mb-3">
                 <InputText
                     name="color"
-                    type="text"
+                    type="color"
                     label="Color"
                     placeholder=""
                     v-model.trim.lazy="formValues.color"
@@ -70,7 +70,7 @@
                     :errors="formValuesErrors.year"
                 />
             </div>
-
+            {{ formValues }}
         </template>
         <template 
             v-slot:actions
@@ -86,6 +86,7 @@
                 @click="createEvent"
             />
         </template>
+        
     </modal>
 </template>
 
@@ -133,7 +134,7 @@ export default {
 
         const schemaCreate = yup.object().shape({
             plate: yup.string().required().min(3).max(10),
-            color: yup.string().required().min(6).max(6),
+            color: yup.string().required().min(6).max(7),
             brand: yup.string().required().min(3).max(50),
             model: yup.string().required().min(3).max(50),
             serial: yup.string().required().min(3).max(100),
@@ -142,16 +143,16 @@ export default {
         });
 
         let formValues = reactive({
-            plate: makeid(10),
-            color: makeid(6),
-            brand: makeid(30),
-            model: makeid(25),
-            serial: makeid(100),
-            year: `${new Date().getFullYear()}`,
-            is_active: true,
+            // plate: makeid(10),
+            // color: makeid(6),
+            // brand: makeid(30),
+            // model: makeid(25),
+            // serial: makeid(100),
+            // year: `${new Date().getFullYear()}`,
+            // is_active: true,
         });
 
-        let formValuesErrors = reactive({});
+        const formValuesErrors = ref({});
 
         const modal = ref(null)
 
@@ -163,8 +164,8 @@ export default {
             for (const key in formValues) {
                 delete formValues[key]
             }
-            for (const key in formValuesErrors) {
-                delete formValuesErrors[key]
+            for (const key in formValuesErrors.value) {
+                delete formValuesErrors.value[key]
             }
         }
 
@@ -172,19 +173,29 @@ export default {
             console.log('createEvent')
 
             try {
-                const valid = await schemaCreate.validate(formValues, { abortEarly: false })
-                for (const key in formValuesErrors) {
-                    formValuesErrors[key] = []
+                await schemaCreate.validate(formValues, { abortEarly: false })
+                for (const key in formValuesErrors.value) {
+                    formValuesErrors.value[key] = []
                 }
                 try {
                     await create(formValues)
                     modal.value.close();
                     emit('finish_success')
-                } catch (error) {
-                    console.log('error',error)
+                } catch (err) {
+                    if(err?.errors){
+                        for (const key in formValuesErrors.value) {
+                            formValuesErrors.value[key] = []
+                        }
+
+                        const { errors } = err
+                        for (const error in errors) {
+                            formValuesErrors.value[error] = err.errors[error]
+                        }
+
+                    }
                 }
             } catch (err) {
-                formValuesErrors = getErrorsFromYup({arr:formValuesErrors, err})
+                formValuesErrors.value = getErrorsFromYup({arr:formValuesErrors.value, err})
             }
             
         }

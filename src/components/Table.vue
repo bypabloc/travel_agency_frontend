@@ -79,7 +79,7 @@
                                 :style="{
                                     height: '25px',
                                     width: '25px',
-                                    'background-color': '#' + row[column.field],
+                                    'background-color': row[column.field],
                                     borderRadius: '50%',
                                     display: 'inline-block',
                                 }"
