@@ -84,10 +84,12 @@
                                         {
                                             label: 'Creado en',
                                             field: 'created_at',
+                                            type: 'datetime-ago',
                                         },
                                         {
                                             label: 'Actualizado en',
                                             field: 'updated_at',
+                                            type: 'datetime-ago',
                                         },
                                     ]"
                                     :list="listData.list"

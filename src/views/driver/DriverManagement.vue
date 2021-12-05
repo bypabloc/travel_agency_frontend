@@ -43,38 +43,27 @@
                                             field: 'id',
                                         },
                                         {
-                                            label: 'Placa',
-                                            field: 'plate',
+                                            label: 'document',
+                                            field: 'document',
                                             type: 'text',
                                             limit: 10,
                                         },
                                         {
-                                            label: 'Color',
-                                            field: 'color',
-                                            type: 'color',
-                                        },
-                                        {
-                                            label: 'Marca',
-                                            field: 'brand',
+                                            label: 'names',
+                                            field: 'names',
                                             type: 'text',
                                             limit: 10,
                                         },
                                         {
-                                            label: 'Modelo',
-                                            field: 'model',
+                                            label: 'lastname',
+                                            field: 'lastname',
                                             type: 'text',
                                             limit: 10,
                                         },
                                         {
-                                            label: 'Serial',
-                                            field: 'serial',
-                                            type: 'text',
-                                            limit: 10,
-                                        },
-                                        {
-                                            label: 'Año',
-                                            field: 'year',
-                                            limit: 10,
+                                            label: 'date_of_birth',
+                                            field: 'date_of_birth',
+                                            type: 'date',
                                         },
                                         {
                                             label: 'Activo',
@@ -84,10 +73,12 @@
                                         {
                                             label: 'Creado en',
                                             field: 'created_at',
+                                            type: 'datetime-ago',
                                         },
                                         {
                                             label: 'Actualizado en',
                                             field: 'updated_at',
+                                            type: 'datetime-ago',
                                         },
                                     ]"
                                     :list="listData.list"
@@ -133,7 +124,7 @@ import ButtonCustom from '@/components/Button.vue'
 import PaginationCustom from '@/components/Pagination.vue'
 import Create from './Create.vue'
 
-import useBus from '@/composables/useBus';
+import useDriver from '@/composables/useDriver';
 
 export default {
     name: 'BusManagement',
@@ -153,7 +144,7 @@ export default {
             setParams,
             getList,
             setStateChange,
-        } = useBus()
+        } = useDriver()
 
         onBeforeMount(() => {
             getList()
