@@ -10,7 +10,7 @@
         @close="close"
     >
         <template v-slot:title>
-            <h5 class="modal-title font-weight-bold">Crear bus</h5>
+            <h5 class="modal-title font-weight-bold">Crear chofer</h5>
         </template>
         <template v-slot:body>
             <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
@@ -51,7 +51,7 @@
             <div class="mb-3">
                 <InputText
                     name="date_of_birth"
-                    type="text"
+                    type="date"
                     label="Fecha de nacimiento"
                     placeholder=""
                     v-model.trim.lazy="formValues.date_of_birth"
@@ -59,6 +59,11 @@
                     :errors="formValuesErrors.date_of_birth"
                 />
             </div>
+            <pre>
+                <code>
+                    {{ formValues }}
+                </code>
+            </pre>
         </template>
         <template 
             v-slot:actions
@@ -83,12 +88,13 @@
 import { ref, reactive } from 'vue'
 
 import * as yup from 'yup';
+import moment from 'moment';
 
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
 import InputText from '@/components/InputText.vue'
 
-import useBus from '@/composables/useBus'
+import useDriver from '@/composables/useDriver'
 
 import { getErrorsFromYup } from '@/helpers'
 
@@ -118,7 +124,7 @@ export default {
             createFetchingData, 
             createErrors,
             create,
-        } = useBus()
+        } = useDriver()
 
         // document = models.CharField(max_length=15, unique=True)
         // names = models.CharField(max_length=50)
@@ -137,7 +143,7 @@ export default {
             document: makeid(15),
             names: makeid(50),
             lastname: makeid(15),
-            date_of_birth: '1991-08-08',
+            date_of_birth: moment().format('YYYY-MM-DD'),
             is_active: true,
         });
 
@@ -156,6 +162,7 @@ export default {
             for (const key in formValuesErrors.value) {
                 delete formValuesErrors.value[key]
             }
+            formValues['date_of_birth'] = moment().format('YYYY-MM-DD')
         }
 
         const createEvent = async () => {

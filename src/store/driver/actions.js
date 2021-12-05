@@ -27,24 +27,22 @@ export default {
         });
     },
     create ({commit}, {
-        plate,
-        color,
-        brand,
-        model,
-        serial,
-        year,
+        document,
+        names,
+        lastname,
+        date_of_birth,
+        is_active,
     }) {
         commit( types.CREATE_FETCH_REQUEST )
 
         return endpoint.post({
             url: `${types.route}/create`,
             params: {
-                plate,
-                color,
-                brand,
-                model,
-                serial,
-                year,
+                document,
+                names,
+                lastname,
+                date_of_birth,
+                is_active,
             },
         })
         .then(({ data }) => { 
