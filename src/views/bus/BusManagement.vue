@@ -123,12 +123,6 @@
         ref="modal_create"
         @finish_success="getList"
     />
-
-    <pre>
-        <code>
-            {{ listData }}
-        </code>
-    </pre>
 </template>
 
 <script>
