@@ -3,21 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "vue-cli-service build --mode development",
+    "devw": "vue-cli-service serve --mode development --watch ",
+    "lint": "vue-cli-service lint",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "axios": "^0.24.0",
+    "bootstrap": "^5.1.3",
     "core-js": "^3.6.5",
-    "vue": "^3.0.0",
+    "feather-icons": "^4.28.0",
+    "vue": "^3.2.23",
+    "vue-feather": "^2.0.0-rc.1",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "sass-loader": "^10.2.0",
-    "sass": "^1.44.0"
+    "sass": "^1.44.0",
+    "sass-loader": "^10.2.0"
   }
 }

@@ -1,30 +1,76 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+    <div class="wrapper">
+        <SideBarCustom/>
+        <div id="content">
+            <NavBarCustom/>
+            <div class="container">
+                <LoaderViews/>
+                <div class="line"></div>
+            </div>
+        </div>
+    </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import { ref } from 'vue'
+import NavBarCustom from './components/NavBarCustom.vue'
+import SideBarCustom from './components/SideBarCustom.vue'
+import HelloWorld from '@/components/HelloWorld.vue'
+import LoaderViews from '@/components/LoaderViews.vue'
+
+export default {
+    name: 'NavBar',
+    components: {
+        NavBarCustom,
+        SideBarCustom,
+        HelloWorld,
+        LoaderViews,
+    },
+    setup() {
+
+        const isOpenSideBar = ref(false);
+        const isOpenNavBar = ref(false);
+
+        const collapseSideBar = () => {
+            isOpenSideBar.value = !isOpenSideBar.value;
+        }
+        const collapseNavBar = () => {
+            isOpenNavBar.value = !isOpenNavBar.value;
+        }
+
+        return {
+            collapseSideBar,
+            isOpenSideBar,
+
+            collapseNavBar,
+            isOpenNavBar,
+        }
+    }
+}
+</script>
+
+<style scoped>
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #6d7fcc;
 }
 
-#nav {
-  padding: 30px;
+#content {
+    width: 100%;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
 }
 </style>

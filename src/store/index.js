@@ -1,12 +1,15 @@
-import { createStore } from 'vuex'
+import { createStore, createLogger } from 'vuex'
+
+import config from './config'
+import bus from './bus'
+
+import { debug } from '@/helpers/getVars.js'
 
 export default createStore({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
+    strict: debug,
+    plugins: debug ? [createLogger()] : [],
+    modules: {
+        config,
+        bus,
+    },
 })
