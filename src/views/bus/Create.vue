@@ -39,6 +39,17 @@
             </div>
             <div class="mb-3">
                 <InputText
+                    name="brand"
+                    type="text"
+                    label="Marca"
+                    placeholder=""
+                    v-model.trim.lazy="formValues.brand"
+                    :value="formValues.brand"
+                    :errors="formValuesErrors.brand"
+                />
+            </div>
+            <div class="mb-3">
+                <InputText
                     name="model"
                     type="text"
                     label="Modelo"
@@ -195,6 +206,7 @@ export default {
                     }
                 }
             } catch (err) {
+                console.log('createEvent -> catch', err)
                 formValuesErrors.value = getErrorsFromYup({arr:formValuesErrors.value, err})
             }
             

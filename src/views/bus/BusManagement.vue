@@ -174,14 +174,12 @@ export default {
         }
 
         const state_change = ({id, active}) => {
-            console.log('state_change -> ',id,active)
             setStateChange({id, active}).then(getList)
             
         }
 
         const modal_create = ref(null)
         const modalEvent = () => {
-            console.log('modal_create',modal_create)
             modal_create.value.open();
         }
 
