@@ -10,9 +10,9 @@ export default [
         name: 'Drivers',
         path: '/drivers',
         text: 'Choferes',
-        component: 'Drivers.vue',
+        component: 'driver/DriverManagement',
         divider: true,
-        isActive: false,
+        isActive: true,
     },
     {
         name: 'Location',
