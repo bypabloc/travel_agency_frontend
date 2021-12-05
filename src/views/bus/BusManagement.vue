@@ -9,12 +9,24 @@
                         </div>
                         <div class="col">
                             <div class="d-flex justify-content-end gap-2">
-                                <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-2">
-                                    <vue-feather type="plus"></vue-feather> Nuevo
-                                </button>
-                                <button type="button" class="btn btn-outline-primary d-flex align-items-center gap-2" @click="getList">
-                                    <vue-feather type="rotate-cw"></vue-feather> Actualizar
-                                </button>
+                                <ButtonCustom
+                                    :classesNames="{
+                                        btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
+                                    }" 
+                                    type="button" 
+                                    text="Nuevo" 
+                                    icon="plus" 
+                                />
+                                <ButtonCustom
+                                    :classesNames="{
+                                        btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
+                                    }" 
+                                    type="button" 
+                                    text="Actualizar" 
+                                    icon="rotate-cw" 
+                                    :loading="listFetchingData" 
+                                    @click="getList"
+                                />
                             </div>
                         </div>
                     </div>
@@ -71,22 +83,40 @@
                                         },
                                     ]"
                                     :list="listData.list"
-                                    :per_page="listParams.perPage"
+                                    :per_page="listParams.per_page"
                                     @update="updateList"
                                 >
                                     <template v-slot:actions="props">
                                         <ButtonCustom
                                             :classesNames="{
-                                                btn_custom: 'btn-outline-danger',
+                                                btn_custom: 'btn btn-outline-warning d-flex align-items-center gap-2',
                                             }" 
                                             type="button" 
                                             text="Eliminar" 
-                                            icon="fas fa-save" 
+                                            icon="alert-triangle" 
+                                            :loading="props.dataFetchingData" 
+                                            @click="deleteEvent({id:props.dataId})"
+                                        />
+                                        <ButtonCustom
+                                            :classesNames="{
+                                                btn_custom: 'btn btn-outline-danger d-flex align-items-center gap-2',
+                                            }" 
+                                            type="button" 
+                                            text="Eliminar" 
+                                            icon="trash" 
                                             :loading="props.dataFetchingData" 
                                             @click="deleteEvent({id:props.dataId})"
                                         />
                                     </template>
                                 </TableCustom>
+                                <PaginationCustom
+                                    :page="listData.page"
+                                    :per_page="listData.per_page"
+                                    :last_page="listData.last_page"
+                                    :next_page="listData.next_page"
+                                    :prev_page="listData.prev_page"
+                                    @update="updateList"
+                                />
                             </div>
                         </div>
                     </div>
@@ -107,6 +137,7 @@ import { ref, reactive, computed, onBeforeMount, inject } from "vue";
 
 import TableCustom from '@/components/Table.vue'
 import ButtonCustom from '@/components/Button.vue'
+import PaginationCustom from '@/components/Pagination.vue'
 
 import useBus from '@/composables/useBus';
 
@@ -115,6 +146,7 @@ export default {
     components:{
         TableCustom,
         ButtonCustom,
+        PaginationCustom,
     },
     setup() {
 
@@ -131,9 +163,10 @@ export default {
             getList()
         })
 
-        const updateList = ({per_page}) => {
+        const updateList = ({per_page, page}) => {
             setParams({
                 per_page,
+                page,
             })
             getList()
         }

@@ -9,10 +9,10 @@
             'ml-1'
         ]"
     >
-        <div v-if="!loading">
-            <i :class="icon"></i>
+        <template v-if="!loading">
+            <vue-feather :type="icon"></vue-feather>
             {{ text }}
-        </div>
+        </template>
         <div v-else class="d-flex justify-content-center align-items-center">
             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
             <span v-if="text">
