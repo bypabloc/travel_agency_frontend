@@ -10,35 +10,38 @@
         </div>
     </div>
 
-    <table class="table table-hover table-responsive">
-        <thead>
-            <tr>
-                <th v-for="column in columns" :key="column.field">
-                    {{ column.label }}
-                </th>
-            </tr>
-        </thead>
-        <tbody v-if="list">
-            <tr v-for="row of list" :key="row.id">
-                <td v-for="column in columns" :key="column.field">
-                    <div v-if="column.field === 'actions'">
-                        <slot name="actions" :data-id="row.id" :data-fetching-data="row?.fetchingData"></slot>
-                    </div>
-                    <div v-else>
-                        {{ row[column.field] }}
-                    </div>
-                </td>
-                <!-- {{ row }} -->
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th v-for="column in columns" :key="column.field">
-                    {{ column.label }}
-                </th>
-            </tr>
-        </tfoot>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th v-for="column in columns" :key="column.field">
+                        {{ column.label }}
+                    </th>
+                </tr>
+            </thead>
+            <tbody v-if="list">
+                <tr v-for="row of list" :key="row.id">
+                    <td v-for="column in columns" :key="column.field">
+                        <div v-if="column.field === 'actions'">
+                            <slot name="actions" :data-id="row.id" :data-fetching-data="row?.fetchingData"></slot>
+                        </div>
+                        <div v-else>
+                            {{ row[column.field] }}
+                        </div>
+                    </td>
+                    <!-- {{ row }} -->
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th v-for="column in columns" :key="column.field">
+                        {{ column.label }}
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
 </template>
 
 <script>

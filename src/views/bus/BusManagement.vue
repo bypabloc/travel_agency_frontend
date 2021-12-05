@@ -65,6 +65,10 @@
                                             label: 'updated_at',
                                             field: 'updated_at',
                                         },
+                                        {
+                                            label: 'actions',
+                                            field: 'actions',
+                                        },
                                     ]"
                                     :list="listData.list"
                                     :per_page="listParams.perPage"
