@@ -2,6 +2,18 @@ export default {
     fetchingData : false,
     errors : null,
     data : {},
+    create: {
+        fetchingData : false,
+        errors : null,
+        data : {
+            // plate: 'plate',
+            // color: 'color',
+            // brand: 'brand',
+            // model: 'model',
+            // serial: 'serial',
+            // year: 'year',
+        },
+    },
     list: {
         fetchingData : false,
         errors : null,
@@ -13,7 +25,21 @@ export default {
             last_page: 1,
             next_page: 1,
             prev_page: null,
-            list: [],
+            list: [
+                // Example 
+                // {
+                //     id: 1,
+                //     plate: 'plate',
+                //     color: 'color',
+                //     brand: 'brand',
+                //     model: 'model',
+                //     serial: 'serial',
+                //     year: 'year',
+                //     is_active: 'is_active',
+                //     created_at: 'created_at',
+                //     updated_at: 'updated_at',
+                // }
+            ],
         },
         params: {
             // Example of what the backend expects

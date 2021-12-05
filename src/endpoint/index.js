@@ -58,7 +58,10 @@ export default {
             }
         })
     },
+    
     post({url,params}){
+
+        console.log('endpoint -> params',params)
         const param_with_format = {
             ...params,
             format,

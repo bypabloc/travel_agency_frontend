@@ -16,6 +16,7 @@
                                     type="button" 
                                     text="Nuevo" 
                                     icon="plus" 
+                                    @click="modalEvent"
                                 />
                                 <ButtonCustom
                                     :classesNames="{
@@ -125,6 +126,11 @@
         </div>
     </div>
 
+    <Create
+        ref="modal_create"
+        @finish_success="getList"
+    />
+
     <pre>
         <code>
             {{ listData }}
@@ -138,6 +144,7 @@ import { ref, reactive, computed, onBeforeMount, inject } from "vue";
 import TableCustom from '@/components/Table.vue'
 import ButtonCustom from '@/components/Button.vue'
 import PaginationCustom from '@/components/Pagination.vue'
+import Create from './Create.vue'
 
 import useBus from '@/composables/useBus';
 
@@ -147,6 +154,7 @@ export default {
         TableCustom,
         ButtonCustom,
         PaginationCustom,
+        Create,
     },
     setup() {
 
@@ -171,6 +179,12 @@ export default {
             getList()
         }
 
+        const modal_create = ref(null)
+        const modalEvent = () => {
+            console.log('modal_create',modal_create)
+            modal_create.value.open();
+        }
+
         return {
             listFetchingData,
             listErrors,
@@ -178,6 +192,8 @@ export default {
             listParams,
             updateList,
             getList,
+            modalEvent,
+            modal_create,
         }
     },
 }

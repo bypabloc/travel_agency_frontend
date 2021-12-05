@@ -17,7 +17,8 @@
     "vue": "^3.2.23",
     "vue-feather": "^2.0.0-rc.1",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

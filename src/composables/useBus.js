@@ -13,17 +13,17 @@ export default () => {
     console.log('useBus.js -> store.state.bus', store);
 
     return {
-        fetchingData: computed(() => store.getters[`${module}/fetchingData`] ),
-        errors: computed(() => store.getters[`${module}/errors`] ),
-
         listFetchingData: computed(() => store.getters[`${module}/listFetchingData`] ),
         listErrors: computed(() => store.getters[`${module}/listErrors`] ),
         listData: computed(() => store.getters[`${module}/listData`] ),
-        listParams: computed(() => store.getters[`${module}/listParams`] ),
+        getList: () => store.dispatch(`${module}/getList`),
 
-        // Methods
+        listParams: computed(() => store.getters[`${module}/listParams`] ),
         setParams: ( e ) => store.dispatch(`${module}/setParams`, e ),
-        getList: ( e ) => store.dispatch(`${module}/getList`, e ),
+
+        createFetchingData: computed(() => store.getters[`${module}/createFetchingData`] ),
+        createErrors: computed(() => store.getters[`${module}/createErrors`] ),
+        create: () => store.dispatch(`${module}/create`),
 
         findOne: ( e ) => store.dispatch(`${module}/findOne`, e ),
         create: ( e ) => store.dispatch(`${module}/create`, e ),

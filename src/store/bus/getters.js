@@ -5,6 +5,7 @@ export default {
     errors( state, ) {
         return state.errors
     },
+    
     listFetchingData( state, ) {
         return state.list.fetchingData
     },
@@ -16,5 +17,12 @@ export default {
     },
     listParams( state, ) {
         return state.list.params
+    },
+
+    createFetchingData( state, ) {
+        return state.create.fetchingData
+    },
+    createErrors( state, ) {
+        return state.create.errors
     },
 }

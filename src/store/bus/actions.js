@@ -23,6 +23,38 @@ export default {
             filter_by,
         } )
     },
+    create ({commit}, {
+        plate,
+        color,
+        brand,
+        model,
+        serial,
+        year,
+    }) {
+        commit( types.CREATE_FETCH_REQUEST )
+
+        return endpoint.post({
+            url: `${types.route}/create`,
+            params: {
+                plate,
+                color,
+                brand,
+                model,
+                serial,
+                year,
+            },
+        })
+        .then(({ data }) => { 
+            commit(types.CREATE_FETCH_SUCCESS, data)
+            return data;
+        })
+        .catch(err => {
+            console.log('err',err)
+            commit(types.CREATE_FETCH_FAILURE, { err: err.errors }) 
+            return Promise.reject(err);
+        });
+    },
+    
     getList ({state,commit}) {
         console.log('bus actions getList',state)
         
@@ -32,22 +64,14 @@ export default {
             url: `${types.route}/list`,
             params: state.list.params,
         })
-        .then(data => {
+        .then(({ data }) => {
             commit(types.LIST_FETCH_SUCCESS, data )
-
             return data;
         })
         .catch(err => {
-            if(err?.response){
-                const { response } = err
-                const { data, status } = response
-
-                commit(types.LIST_FETCH_FAILURE, { err: err.errors }) 
-
-                return data
-            }
-
-            
+            console.log('err',err)
+            commit(types.FETCH_FAILURE, { err: err.errors }) 
+            return Promise.reject(err);
         });
     },
 }
