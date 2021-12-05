@@ -7,11 +7,6 @@ export default () => {
 
     const store = useStore();
 
-    // dispatch -> actions
-    // commit -> mutations
-
-    console.log('useBus.js -> store.state.bus', store);
-
     return {
         listFetchingData: computed(() => store.getters[`${module}/listFetchingData`] ),
         listErrors: computed(() => store.getters[`${module}/listErrors`] ),
@@ -27,7 +22,7 @@ export default () => {
 
         findOne: ( e ) => store.dispatch(`${module}/findOne`, e ),
         create: ( e ) => store.dispatch(`${module}/create`, e ),
-        state_change: ( e ) => store.dispatch(`${module}/state_change`, e ),
+        setStateChange: ( e ) => store.dispatch(`${module}/state_change`, e ),
 
         setFetchingData: ( e ) => store.dispatch(`${module}/setFetchingData`, e ),
     }

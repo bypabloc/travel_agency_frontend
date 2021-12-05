@@ -6,22 +6,27 @@ export default {
     setFetchingData ({commit}) {
         commit( types.LIST_FETCH_REQUEST )
     },
-    setParams ({commit}, {
-        page=1,
-        per_page=10,
-        sort='',
-        sort_by='',
-        filter='',
-        filter_by='',
-    }) {
-        commit( types.LIST_SET_PARAMS, {
-            page,
-            per_page,
-            sort,
-            sort_by,
-            filter,
-            filter_by,
-        } )
+    setParams ({commit}, params) {
+        commit( types.LIST_SET_PARAMS, params )
+    },
+    getList ({state,commit}) {
+        console.log('bus actions getList',state)
+        
+        commit( types.LIST_FETCH_REQUEST )
+
+        return endpoint.get({
+            url: `${types.route}/list`,
+            params: state.list.params,
+        })
+        .then(({ data }) => {
+            commit(types.LIST_FETCH_SUCCESS, data )
+            return data;
+        })
+        .catch(err => {
+            console.log('err',err)
+            commit(types.FETCH_FAILURE, { err: err.errors }) 
+            return Promise.reject(err);
+        });
     },
     create ({commit}, {
         plate,
@@ -54,23 +59,26 @@ export default {
             return Promise.reject(err);
         });
     },
-    
-    getList ({state,commit}) {
-        console.log('bus actions getList',state)
-        
-        commit( types.LIST_FETCH_REQUEST )
+    state_change ({commit}, {
+        id,
+        active,
+    }) {
+        commit( types.STATE_CHANGE_FETCH_REQUEST )
 
-        return endpoint.get({
-            url: `${types.route}/list`,
-            params: state.list.params,
+        return endpoint.post({
+            url: `${types.route}/state_change`,
+            params: {
+                id,
+                active: active ? 1 : 0,
+            },
         })
-        .then(({ data }) => {
-            commit(types.LIST_FETCH_SUCCESS, data )
+        .then(({ data }) => { 
+            commit(types.STATE_CHANGE_FETCH_SUCCESS, data)
             return data;
         })
         .catch(err => {
             console.log('err',err)
-            commit(types.FETCH_FAILURE, { err: err.errors }) 
+            commit(types.STATE_CHANGE_FETCH_FAILURE, { err: err.errors }) 
             return Promise.reject(err);
         });
     },

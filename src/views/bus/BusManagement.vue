@@ -39,75 +39,68 @@
                                 <TableCustom
                                     :columns="[
                                         {
-                                            label: 'id',
+                                            label: 'N°',
                                             field: 'id',
                                         },
                                         {
-                                            label: 'plate',
+                                            label: 'Placa',
                                             field: 'plate',
+                                            type: 'text',
+                                            limit: 10,
                                         },
                                         {
-                                            label: 'color',
+                                            label: 'Color',
                                             field: 'color',
+                                            type: 'color',
                                         },
                                         {
-                                            label: 'brand',
+                                            label: 'Marca',
                                             field: 'brand',
+                                            type: 'text',
+                                            limit: 10,
                                         },
                                         {
-                                            label: 'model',
+                                            label: 'Modelo',
                                             field: 'model',
+                                            type: 'text',
+                                            limit: 10,
                                         },
                                         {
-                                            label: 'serial',
+                                            label: 'Serial',
                                             field: 'serial',
+                                            type: 'text',
+                                            limit: 10,
                                         },
                                         {
-                                            label: 'year',
+                                            label: 'Año',
                                             field: 'year',
+                                            limit: 10,
                                         },
                                         {
-                                            label: 'is_active',
+                                            label: 'Activo',
                                             field: 'is_active',
+                                            type: 'custom',
                                         },
                                         {
-                                            label: 'created_at',
+                                            label: 'Creado en',
                                             field: 'created_at',
                                         },
                                         {
-                                            label: 'updated_at',
+                                            label: 'Actualizado en',
                                             field: 'updated_at',
-                                        },
-                                        {
-                                            label: 'actions',
-                                            field: 'actions',
                                         },
                                     ]"
                                     :list="listData.list"
                                     :per_page="listParams.per_page"
                                     @update="updateList"
                                 >
-                                    <template v-slot:actions="props">
-                                        <ButtonCustom
-                                            :classesNames="{
-                                                btn_custom: 'btn btn-outline-warning d-flex align-items-center gap-2',
-                                            }" 
-                                            type="button" 
-                                            text="Eliminar" 
-                                            icon="alert-triangle" 
-                                            :loading="props.dataFetchingData" 
-                                            @click="deleteEvent({id:props.dataId})"
-                                        />
-                                        <ButtonCustom
-                                            :classesNames="{
-                                                btn_custom: 'btn btn-outline-danger d-flex align-items-center gap-2',
-                                            }" 
-                                            type="button" 
-                                            text="Eliminar" 
-                                            icon="trash" 
-                                            :loading="props.dataFetchingData" 
-                                            @click="deleteEvent({id:props.dataId})"
-                                        />
+                                    <template v-slot:custom="{ dataRow }">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" :checked="dataRow.is_active" @change="state_change({
+                                                active: $event.target.checked,
+                                                id: dataRow.id,
+                                            })">
+                                        </div>
                                     </template>
                                 </TableCustom>
                                 <PaginationCustom
@@ -139,7 +132,7 @@
 </template>
 
 <script>
-import { ref, reactive, computed, onBeforeMount, inject } from "vue";
+import { ref, onBeforeMount } from "vue";
 
 import TableCustom from '@/components/Table.vue'
 import ButtonCustom from '@/components/Button.vue'
@@ -165,6 +158,7 @@ export default {
             listParams,
             setParams,
             getList,
+            setStateChange,
         } = useBus()
 
         onBeforeMount(() => {
@@ -177,6 +171,12 @@ export default {
                 page,
             })
             getList()
+        }
+
+        const state_change = ({id, active}) => {
+            console.log('state_change -> ',id,active)
+            setStateChange({id, active}).then(getList)
+            
         }
 
         const modal_create = ref(null)
@@ -194,6 +194,7 @@ export default {
             getList,
             modalEvent,
             modal_create,
+            state_change,
         }
     },
 }

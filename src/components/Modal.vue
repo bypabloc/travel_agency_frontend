@@ -175,6 +175,7 @@ export default {
             // const overlay = this.$refs.overlay
             // overlay.style.display = 'none'
             this.destroy()
+            this.$emit('close');
         })
         element.addEventListener('shown.bs.modal', function (event) {
             // myInput.focus()

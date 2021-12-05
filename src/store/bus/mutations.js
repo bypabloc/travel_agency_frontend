@@ -34,4 +34,18 @@ export default {
         state.create.fetchingData = false
         state.create.errors = errors
     },
+
+    [types.STATE_CHANGE_FETCH_REQUEST] (state){
+        state.create.fetchingData = true
+        state.create.errors = null
+    },
+    [types.STATE_CHANGE_FETCH_SUCCESS] (state, { data }){
+        state.create.fetchingData = false
+        state.create.errors = null
+        state.create.data = data.bus
+    },
+    [types.STATE_CHANGE_FETCH_FAILURE] (state, { errors }){
+        state.create.fetchingData = false
+        state.create.errors = errors
+    },
 }

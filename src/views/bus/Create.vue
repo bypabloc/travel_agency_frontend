@@ -62,7 +62,7 @@
             <div class="mb-3">
                 <InputText
                     name="year"
-                    type="text"
+                    type="number"
                     label="Año"
                     placeholder=""
                     v-model.trim.lazy="formValues.year"
@@ -115,6 +115,16 @@ export default {
     },
     setup(props, { emit, attrs }) {
 
+        const makeid = (length) => {
+            let result             = '';
+            const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            const charactersLength = characters.length;
+            for ( let i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
         const {
             createFetchingData, 
             createErrors,
@@ -132,11 +142,11 @@ export default {
         });
 
         let formValues = reactive({
-            plate: '065-87-89',
-            color: '000000',
-            brand: 'Toyota',
-            model: 'Yaris',
-            serial: '123456789',
+            plate: makeid(10),
+            color: makeid(6),
+            brand: makeid(30),
+            model: makeid(25),
+            serial: makeid(100),
             year: `${new Date().getFullYear()}`,
             is_active: true,
         });
@@ -151,7 +161,10 @@ export default {
 
         const close = () => {
             for (const key in formValues) {
-                formValues[key] = null
+                delete formValues[key]
+            }
+            for (const key in formValuesErrors) {
+                delete formValuesErrors[key]
             }
         }
 
