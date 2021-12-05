@@ -81,10 +81,7 @@ export default {
             getList,
         } = useBus()
 
-        getList({
-            page: '',
-            per_page:'',
-        })
+        getList()
 
         return {
             listFetchingData,

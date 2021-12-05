@@ -3,7 +3,7 @@ import { useStore } from 'vuex'
 
 export default () => {
 
-    const modules = 'bus';
+    const module = 'bus';
 
     const store = useStore();
 
@@ -13,19 +13,22 @@ export default () => {
     console.log('useBus.js -> store.state.bus', store);
 
     return {
-        fetchingData: computed(() => store.getters[`${modules}/fetchingData`] ),
-        errors: computed(() => store.getters[`${modules}/errors`] ),
+        fetchingData: computed(() => store.getters[`${module}/fetchingData`] ),
+        errors: computed(() => store.getters[`${module}/errors`] ),
 
-        listFetchingData: computed(() => store.getters[`${modules}/listFetchingData`] ),
-        listErrors: computed(() => store.getters[`${modules}/listErrors`] ),
-        listData: computed(() => store.getters[`${modules}/listData`] ),
+        listFetchingData: computed(() => store.getters[`${module}/listFetchingData`] ),
+        listErrors: computed(() => store.getters[`${module}/listErrors`] ),
+        listData: computed(() => store.getters[`${module}/listData`] ),
+        listParams: computed(() => store.getters[`${module}/listParams`] ),
 
         // Methods
-        getList: ( e ) => store.dispatch(`${modules}/getList`, e ),
-        findOne: ( e ) => store.dispatch(`${modules}/findOne`, e ),
-        create: ( e ) => store.dispatch(`${modules}/create`, e ),
-        state_change: ( e ) => store.dispatch(`${modules}/state_change`, e ),
+        setParams: ( e ) => store.dispatch(`${module}/setParams`, e ),
+        getList: ( e ) => store.dispatch(`${module}/getList`, e ),
 
-        setFetchingData: ( e ) => store.dispatch(`${modules}/setFetchingData`, e ),
+        findOne: ( e ) => store.dispatch(`${module}/findOne`, e ),
+        create: ( e ) => store.dispatch(`${module}/create`, e ),
+        state_change: ( e ) => store.dispatch(`${module}/state_change`, e ),
+
+        setFetchingData: ( e ) => store.dispatch(`${module}/setFetchingData`, e ),
     }
 }

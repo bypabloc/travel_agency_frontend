@@ -14,4 +14,7 @@ export default {
     listData( state, ) {
         return state.list.data
     },
+    listParams( state, ) {
+        return state.list.params
+    },
 }

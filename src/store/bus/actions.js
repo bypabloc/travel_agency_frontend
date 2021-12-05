@@ -6,7 +6,7 @@ export default {
     setFetchingData ({commit}) {
         commit( types.LIST_FETCH_REQUEST )
     },
-    getList ({commit}, {
+    setParams ({commit}, {
         page,
         per_page,
         sort='',
@@ -14,20 +14,23 @@ export default {
         filter='',
         filter_by='',
     }) {
-        console.log('bus actions getList')
+        commit( types.LIST_SET_PARAMS, {
+            page,
+            per_page,
+            sort,
+            sort_by,
+            filter,
+            filter_by,
+        } )
+    },
+    getList ({state,commit}) {
+        console.log('bus actions getList',state)
         
         commit( types.LIST_FETCH_REQUEST )
 
         return endpoint.get({
             url: `${types.route}/list`,
-            params: {
-                page,
-                per_page,
-                sort,
-                sort_by,
-                filter,
-                filter_by,
-            },
+            params: state.list.params,
         })
         .then(data => {
             commit(types.LIST_FETCH_SUCCESS, data )
@@ -48,11 +51,3 @@ export default {
         });
     },
 }
-
-// // Methods
-// getList: ( e ) => store.dispatch(`${object}/getList`, e ),
-// findOne: ( e ) => store.dispatch(`${object}/findOne`, e ),
-// create: ( e ) => store.dispatch(`${object}/create`, e ),
-// state_change: ( e ) => store.dispatch(`${object}/state_change`, e ),
-
-// setFetchingData: ( e ) => store.dispatch(`${object}/setFetchingData`, e ),

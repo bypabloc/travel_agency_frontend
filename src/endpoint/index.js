@@ -52,8 +52,10 @@ instance.interceptors.response.use(
 export default {
     get({url,params}){
         return instance.get(url,{
-            ...params,
-            format,
+            params: {
+                ...params,
+                format,
+            }
         })
     },
     post({url,params}){
