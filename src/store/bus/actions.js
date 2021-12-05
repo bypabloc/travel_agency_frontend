@@ -7,8 +7,8 @@ export default {
         commit( types.LIST_FETCH_REQUEST )
     },
     setParams ({commit}, {
-        page,
-        per_page,
+        page=1,
+        per_page=10,
         sort='',
         sort_by='',
         filter='',

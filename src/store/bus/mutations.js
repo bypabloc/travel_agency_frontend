@@ -5,7 +5,7 @@ export default {
         state.list.fetchingData = true
         state.list.errors = null
     },
-    [types.LIST_SET_PARAMS] (state, { params }){
+    [types.LIST_SET_PARAMS] (state, params ){
         state.list.params = {
             ...state.list.params,
             ...params,

@@ -18,7 +18,7 @@ export default {
         params: {
             // Example of what the backend expects
             page: 1,
-            perPage: 10,
+            per_page: 10,
             sort_by: 'created_at',
             sort: 'desc',
             filter: '',
