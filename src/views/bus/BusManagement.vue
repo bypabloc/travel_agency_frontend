@@ -158,6 +158,11 @@ export default {
         } = useBus()
 
         onBeforeMount(() => {
+            setParams({
+                per_page: 10,
+                page: 1,
+                search: undefined,
+            })
             getList()
         })
 

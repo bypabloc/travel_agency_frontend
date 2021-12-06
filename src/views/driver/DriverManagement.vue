@@ -43,26 +43,26 @@
                                             field: 'id',
                                         },
                                         {
-                                            label: 'document',
                                             field: 'document',
+                                            label: 'Documento',
                                             type: 'text',
                                             limit: 10,
                                         },
                                         {
-                                            label: 'names',
                                             field: 'names',
+                                            label: 'Nombres',
                                             type: 'text',
                                             limit: 10,
                                         },
                                         {
-                                            label: 'lastname',
                                             field: 'lastname',
+                                            label: 'Apellidos',
                                             type: 'text',
                                             limit: 10,
                                         },
                                         {
-                                            label: 'date_of_birth',
                                             field: 'date_of_birth',
+                                            label: 'Fecha de nacimiento',
                                             type: 'date',
                                         },
                                         {
