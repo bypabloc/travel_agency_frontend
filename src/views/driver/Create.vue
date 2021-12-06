@@ -59,7 +59,17 @@
                     :errors="formValuesErrors.date_of_birth"
                 />
             </div>
-            <SelectCustom/>
+            <div class="mb-3">
+                <SelectCustom
+                    name="bus"
+                    type="select"
+                    label="Bus"
+                    placeholder=""
+                    v-model.trim.lazy="formValues.bus"
+                    :value="formValues.bus"
+                    :errors="formValuesErrors.bus"
+                />
+            </div>
 
             <pre>
                 <code>
@@ -96,7 +106,7 @@ import moment from 'moment';
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
 import InputText from '@/components/InputText.vue'
-import SelectCustom from '@/components/Select.vue'
+import SelectCustom from '@/views/bus/Select.vue'
 
 import useDriver from '@/composables/useDriver'
 
@@ -141,6 +151,7 @@ export default {
             names: yup.string().required().min(3).max(50),
             lastname: yup.string().required().min(3).max(50),
             date_of_birth: yup.date().required().max(new Date()),
+            bus: yup.number().required(),
             is_active: yup.boolean(),
         });
 

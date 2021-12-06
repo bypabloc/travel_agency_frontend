@@ -32,6 +32,7 @@ export default {
         lastname,
         date_of_birth,
         is_active,
+        bus,
     }) {
         commit( types.CREATE_FETCH_REQUEST )
 
@@ -43,6 +44,7 @@ export default {
                 lastname,
                 date_of_birth,
                 is_active,
+                bus,
             },
         })
         .then(({ data }) => { 
