@@ -41,8 +41,8 @@ export default [
         name: 'Seat',
         path: '/seats',
         text: 'Asientos',
-        component: 'Seat.vue',
-        isActive: false,
+        component: 'seat/Management',
+        isActive: true,
     },
     {
         name: 'JourneyDriver',
