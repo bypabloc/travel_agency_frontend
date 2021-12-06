@@ -59,11 +59,14 @@
                     :errors="formValuesErrors.date_of_birth"
                 />
             </div>
+            <SelectCustom/>
+
             <pre>
                 <code>
                     {{ formValues }}
                 </code>
             </pre>
+
         </template>
         <template 
             v-slot:actions
@@ -93,6 +96,7 @@ import moment from 'moment';
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
 import InputText from '@/components/InputText.vue'
+import SelectCustom from '@/components/Select.vue'
 
 import useDriver from '@/composables/useDriver'
 
@@ -107,6 +111,7 @@ export default {
         Modal,
         ButtonCustom,
         InputText,
+        SelectCustom,
     },
     setup(props, { emit, attrs }) {
 
@@ -197,6 +202,38 @@ export default {
             
         }
 
+        const getBuses = () => {
+            return new Promise(e => (() => {
+                const list = [
+                    {
+                        id: 1,
+                        plate: '1asd32',
+                        brand: 'Toyota',
+                        model: 'Yaris',
+                    }
+                ]
+                return resolve(list)
+            }, 2000) )
+        }
+
+        const search = (loading, search) => {
+            fetch(
+                `https://api.github.com/search/repositories?q=${escape(search)}`
+            ).then(res => {
+                res.json().then(json => (vm.options = json.items));
+                loading(false);
+            });
+        }
+
+        const onSearch = (search, loading) => {
+            console.log('search',search)
+            console.log('loading',loading)
+            if(search.length) {
+                loading(true);
+                search(loading, search);
+            }
+        }
+
         return {
             modal,
             open,
@@ -208,6 +245,8 @@ export default {
             createFetchingData,
 
             createEvent,
+            getBuses,
+            onSearch,
         };
     },
 }
