@@ -154,7 +154,7 @@ export default {
 
         let formValues = reactive({
             // plate: makeid(10),
-            // color: makeid(6),
+            // color: '#000000',
             // brand: makeid(30),
             // model: makeid(25),
             // serial: makeid(100),
@@ -177,6 +177,15 @@ export default {
             for (const key in formValuesErrors.value) {
                 delete formValuesErrors.value[key]
             }
+            // formValues = reactive({
+            //     plate: makeid(10),
+            //     color: '#000000',
+            //     brand: makeid(30),
+            //     model: makeid(25),
+            //     serial: makeid(100),
+            //     year: `${new Date().getFullYear()}`,
+            //     is_active: true,
+            // });
         }
 
         const createEvent = async () => {

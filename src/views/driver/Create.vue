@@ -202,38 +202,6 @@ export default {
             
         }
 
-        const getBuses = () => {
-            return new Promise(e => (() => {
-                const list = [
-                    {
-                        id: 1,
-                        plate: '1asd32',
-                        brand: 'Toyota',
-                        model: 'Yaris',
-                    }
-                ]
-                return resolve(list)
-            }, 2000) )
-        }
-
-        const search = (loading, search) => {
-            fetch(
-                `https://api.github.com/search/repositories?q=${escape(search)}`
-            ).then(res => {
-                res.json().then(json => (vm.options = json.items));
-                loading(false);
-            });
-        }
-
-        const onSearch = (search, loading) => {
-            console.log('search',search)
-            console.log('loading',loading)
-            if(search.length) {
-                loading(true);
-                search(loading, search);
-            }
-        }
-
         return {
             modal,
             open,
@@ -245,8 +213,6 @@ export default {
             createFetchingData,
 
             createEvent,
-            getBuses,
-            onSearch,
         };
     },
 }
