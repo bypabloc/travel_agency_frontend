@@ -60,11 +60,6 @@
                     :errors="formValuesErrors.driver"
                 />
             </div>
-
-            {{ moment(moment().format('DD/MM/YYYY HH:mm:ss'), 'DD/MM/YYYY HH:mm:ss') }}
-
-            {{ formValues }}
-
         </template>
         <template 
             v-slot:actions

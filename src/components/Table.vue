@@ -23,7 +23,7 @@
                 <tr v-for="row of list" :key="row.id">
                     <td v-for="column in columns" :key="column.field">
                         <div v-if="column.type === 'custom'">
-                            <slot name="custom" :data-row="row" :data-field="column.field" :data-field-exact="row[column.field]"></slot>
+                            <slot name="custom" :data-row="row" :data-field="column.field" :data-field-exact="row?.[column.field]"></slot>
                         </div>
                         <div v-else-if="column.type === 'text'">
                             <template v-if="column?.limit">

@@ -43,19 +43,24 @@
                                             field: 'id',
                                         },
                                         {
+                                            label: 'Trayecto',
+                                            field: 'journey',
+                                            type: 'custom',
+                                        },
+                                        {
                                             field: 'datetime_start',
                                             label: 'Hora de Salida',
                                             type: 'datetime',
                                             format: 'DD/MM/YYYY HH:mm:ss',
                                         },
                                         {
-                                            label: 'Chofer',
-                                            field: 'driver',
+                                            label: 'Tiempo estimado de llegada',
+                                            field: 'estimated_time',
                                             type: 'custom',
                                         },
                                         {
-                                            label: 'Trayecto',
-                                            field: 'journey',
+                                            label: 'Chofer',
+                                            field: 'driver',
                                             type: 'custom',
                                         },
                                         {
@@ -85,6 +90,9 @@
                                             <br>
                                             Tiempo estimado: 
                                             {{ secondsToHHMMSS(dataFieldExact.duration_in_seconds*1000) }}
+                                        </div>
+                                        <div v-else-if="dataField == 'estimated_time'">
+                                            {{ moment(dataRow.datetime_start+'-00:00').local().add(dataRow.journey.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
                                         </div>
                                         <div v-else-if="dataField == 'driver'">
                                             Documento: {{ dataFieldExact.document.substring(0,10) }}
@@ -130,6 +138,8 @@
 
 <script>
 import { ref, onBeforeMount } from "vue";
+
+import moment from 'moment';
 
 import TableCustom from '@/components/Table.vue'
 import ButtonCustom from '@/components/Button.vue'
@@ -210,6 +220,7 @@ export default {
             modal_create,
             state_change,
             secondsToHHMMSS,
+            moment,
         }
     },
 }
