@@ -23,15 +23,15 @@
                 <tr v-for="row of list" :key="row.id">
                     <td v-for="column in columns" :key="column.field">
                         <div v-if="column.type === 'custom'">
-                            <slot name="custom" :data-row="row" :data-fetching-data="row?.fetchingData"></slot>
+                            <slot name="custom" :data-row="row" :data-field="column.field" :data-field-exact="row?.[column.field]"></slot>
                         </div>
                         <div v-else-if="column.type === 'text'">
                             <template v-if="column?.limit">
                                 <div 
-                                    v-if="row[column.field].length > column.limit"
+                                    v-if="propFromString(column, row[column.field]).length > column.limit"
                                     
                                 >
-                                    <span>{{ row[column.field].substring(0,column.limit) }}</span>
+                                    <span>{{ propFromString(column, row[column.field]).substring(0,column.limit) }}</span>
                                     <a href="javascript:;" 
                                         :data-is-show="false"
                                         @click="show_hide({
@@ -52,7 +52,7 @@
                                             }"
                                             name='text-hide'
                                         >
-                                            {{ row[column.field].substring(column.limit,row[column.field].length) }}
+                                            {{ propFromString(column, row[column.field]).substring(column.limit,propFromString(column, row[column.field]).length) }}
                                         </span>
                                         <span 
                                             :style="{
@@ -67,11 +67,11 @@
                                     </a>
                                 </div>
                                 <div v-else>
-                                    {{ row[column.field] }}
+                                    {{ propFromString(column, row[column.field]) }}
                                 </div>
                             </template>
-                            <template>
-                                {{ row[column.field] }}
+                            <template v-else>
+                                {{ propFromString(column, row[column.field]) }}
                             </template>
                         </div>
                         <div v-else-if="column.type === 'color'">
@@ -79,20 +79,26 @@
                                 :style="{
                                     height: '25px',
                                     width: '25px',
-                                    'background-color': row[column.field],
+                                    'background-color': propFromString(column, row[column.field]),
                                     borderRadius: '50%',
                                     display: 'inline-block',
                                 }"
                             ></span>
                         </div>
                         <div v-else-if="column.type === 'date'">
-                            {{ dateFormat(row[column.field]) }} ( {{ dateAge(row[column.field]) }} años )
+                            {{ dateFormat(propFromString(column, row[column.field])) }} ( {{ dateAge(propFromString(column, row[column.field])) }} años )
                         </div>
                         <div v-else-if="column.type === 'datetime-ago'">
-                            {{ dateTimeAgo(row[column.field]) }}
+                            {{ dateTimeAgo(propFromString(column, row[column.field])) }}
+                        </div>
+                        <div v-else-if="column.type === 'datetime'">
+                            {{ dateTime(propFromString(column, row[column.field])) }}
+                        </div>
+                        <div v-else-if="column.type === 'seconds-to-time'">
+                            {{ secondsToHHMMSS( row[column.field] * 1000 ) }}
                         </div>
                         <div v-else>
-                            {{ row[column.field] }}
+                            {{ propFromString(column, row[column.field]) }}
                         </div>
                     </td>
                     <!-- {{ row }} -->
@@ -188,8 +194,40 @@ export default {
         dateAge(value) {
             return moment().diff(value, 'years');
         },
+        dateTime(value) {
+            return value ? moment(value+'-00:00').format('DD/MM/YYYY HH:mm:ss') : '';
+        },
         dateTimeAgo(value) {
             return value ? moment(value+'-00:00').local().fromNow(true) : '';
+        },
+        propFromString(column, data) {
+            let result = '';
+            if(typeof data === 'object'){
+                if(column?.search_object){
+                    result = data[column?.search_object]
+                }
+            }else if((typeof data === 'string') || (typeof data === 'number')){
+                result = data
+            }
+            return result
+        },
+        secondsToHHMMSS(count) {
+            const _second = 1000;
+            const _minute = _second * 60;
+            const _hour = _minute * 60;
+            const _day = _hour * 24;
+
+            const days = Math.floor(count / _day);
+            const hours = Math.floor((count % _day) / _hour);
+            const minutes = Math.floor((count % _hour) / _minute);
+            const seconds = Math.floor((count % _minute) / _second);
+
+            return `
+                ${days ? (days>9 ? days : '0'+days)+':' : ''}
+                ${hours ? (hours>9 ? hours : '0'+hours)+':' : (days ? '00' : '')}
+                ${minutes ? (minutes>9 ? minutes : ':0'+minutes)+':' : (hours ? '00' : '')}
+                ${seconds ? (seconds>9 ? seconds : ':0'+seconds) : (minutes ? '00' : '')}
+            `.replace(/ /g,'').replace(/(\r\n|\n|\r)/gm,'');
         },
     },
     created() {

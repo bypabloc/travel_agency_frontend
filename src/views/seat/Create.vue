@@ -10,65 +10,31 @@
         @close="close"
     >
         <template v-slot:title>
-            <h5 class="modal-title font-weight-bold">Crear chofer</h5>
+            <h5 class="modal-title font-weight-bold">Crear asiento</h5>
         </template>
         <template v-slot:body>
             <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
 
             <div class="mb-3">
                 <InputText
-                    name="document"
+                    name="seat_x"
                     type="text"
-                    label="Documento"
+                    label="X"
                     placeholder=""
-                    v-model.trim.lazy="formValues.document"
-                    :value="formValues.document"
-                    :errors="formValuesErrors.document"
+                    v-model.trim.lazy="formValues.seat_x"
+                    :value="formValues.seat_x"
+                    :errors="formValuesErrors.seat_x"
                 />
             </div>
             <div class="mb-3">
                 <InputText
-                    name="names"
+                    name="seat_y"
                     type="text"
-                    label="Nombres"
+                    label="Y"
                     placeholder=""
-                    v-model.trim.lazy="formValues.names"
-                    :value="formValues.names"
-                    :errors="formValuesErrors.names"
-                />
-            </div>
-            <div class="mb-3">
-                <InputText
-                    name="lastname"
-                    type="text"
-                    label="Apellidos"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.lastname"
-                    :value="formValues.lastname"
-                    :errors="formValuesErrors.lastname"
-                />
-            </div>
-            <div class="mb-3">
-                <InputDate
-                    name="date_of_birth"
-                    type="date"
-                    :max="new Date()"
-                    label="Fecha de nacimiento"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.date_of_birth"
-                    :value="formValues.date_of_birth"
-                    :errors="formValuesErrors.date_of_birth"
-                />
-            </div>
-            <div class="mb-3">
-                <SelectCustom
-                    name="bus"
-                    type="select"
-                    label="Bus"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.bus"
-                    :value="formValues.bus"
-                    :errors="formValuesErrors.bus"
+                    v-model.trim.lazy="formValues.seat_y"
+                    :value="formValues.seat_y"
+                    :errors="formValuesErrors.seat_y"
                 />
             </div>
 
@@ -101,10 +67,8 @@ import moment from 'moment';
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
 import InputText from '@/components/InputText.vue'
-import InputDate from '@/components/InputDate.vue'
-import SelectCustom from '@/views/bus/Select.vue'
 
-import useDriver from '@/composables/useDriver'
+import useSeat from '@/composables/useSeat'
 
 import { getErrorsFromYup } from '@/helpers'
 
@@ -117,26 +81,14 @@ export default {
         Modal,
         ButtonCustom,
         InputText,
-        InputDate,
-        SelectCustom,
     },
     setup(props, { emit, attrs }) {
-
-        const makeid = (length) => {
-            let result             = '';
-            const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            const charactersLength = characters.length;
-            for ( let i = 0; i < length; i++ ) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-            return result;
-        }
 
         const {
             createFetchingData, 
             createErrors,
             create,
-        } = useDriver()
+        } = useSeat()
 
         // document = models.CharField(max_length=15, unique=True)
         // names = models.CharField(max_length=50)
@@ -144,20 +96,13 @@ export default {
         // date_of_birth = models.DateField()
 
         const schemaCreate = yup.object().shape({
-            document: yup.string().required().min(3).max(15),
-            names: yup.string().required().min(3).max(50),
-            lastname: yup.string().required().min(3).max(50),
-            date_of_birth: yup.date().required().max(new Date()),
-            bus: yup.number().required(),
+            seat_x: yup.string().required().min(1).max(1),
+            seat_y: yup.string().required().min(1).max(1),
             is_active: yup.boolean(),
         });
 
         let formValues = reactive({
-            // document: makeid(15),
-            // names: makeid(50),
-            // lastname: makeid(15),
-            date_of_birth: moment().format('YYYY-MM-DD'),
-            // is_active: true,
+            is_active: true,
         });
 
         const formValuesErrors = ref({});

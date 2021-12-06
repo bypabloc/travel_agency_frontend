@@ -1,4 +1,4 @@
-export const route = 'bus';
+export const route = 'passenger';
 
 export const LIST_SET_PARAMS = 'LIST_SET_PARAMS';
 export const LIST_FETCH_REQUEST = 'LIST_FETCH_REQUEST';

@@ -43,27 +43,16 @@
                                             field: 'id',
                                         },
                                         {
-                                            label: 'document',
-                                            field: 'document',
+                                            field: 'seat_x',
+                                            label: 'X',
                                             type: 'text',
                                             limit: 10,
                                         },
                                         {
-                                            label: 'names',
-                                            field: 'names',
+                                            field: 'seat_y',
+                                            label: 'Y',
                                             type: 'text',
                                             limit: 10,
-                                        },
-                                        {
-                                            label: 'lastname',
-                                            field: 'lastname',
-                                            type: 'text',
-                                            limit: 10,
-                                        },
-                                        {
-                                            label: 'date_of_birth',
-                                            field: 'date_of_birth',
-                                            type: 'date',
                                         },
                                         {
                                             label: 'Activo',
@@ -124,7 +113,7 @@ import ButtonCustom from '@/components/Button.vue'
 import PaginationCustom from '@/components/Pagination.vue'
 import Create from './Create.vue'
 
-import useDriver from '@/composables/useDriver';
+import useSeat from '@/composables/useSeat';
 
 export default {
     name: 'BusManagement',
@@ -144,7 +133,7 @@ export default {
             setParams,
             getList,
             setStateChange,
-        } = useDriver()
+        } = useSeat()
 
         onBeforeMount(() => {
             getList()

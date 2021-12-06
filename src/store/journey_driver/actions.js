@@ -10,8 +10,6 @@ export default {
         commit( types.LIST_SET_PARAMS, params )
     },
     getList ({state,commit}) {
-        console.log('bus actions getList',state)
-        
         commit( types.LIST_FETCH_REQUEST )
 
         return endpoint.get({
@@ -29,24 +27,20 @@ export default {
         });
     },
     create ({commit}, {
-        plate,
-        color,
-        brand,
-        model,
-        serial,
-        year,
+        datetime_start,
+        states,
+        journey,
+        driver,
     }) {
         commit( types.CREATE_FETCH_REQUEST )
 
         return endpoint.post({
             url: `${types.route}/create`,
             params: {
-                plate,
-                color,
-                brand,
-                model,
-                serial,
-                year,
+                datetime_start,
+                states,
+                journey,
+                driver,
             },
         })
         .then(({ data }) => { 

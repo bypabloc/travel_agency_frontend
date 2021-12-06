@@ -10,7 +10,7 @@
         @close="close"
     >
         <template v-slot:title>
-            <h5 class="modal-title font-weight-bold">Crear chofer</h5>
+            <h5 class="modal-title font-weight-bold">Crear pasajero</h5>
         </template>
         <template v-slot:body>
             <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
@@ -52,23 +52,11 @@
                 <InputDate
                     name="date_of_birth"
                     type="date"
-                    :max="new Date()"
                     label="Fecha de nacimiento"
                     placeholder=""
                     v-model.trim.lazy="formValues.date_of_birth"
                     :value="formValues.date_of_birth"
                     :errors="formValuesErrors.date_of_birth"
-                />
-            </div>
-            <div class="mb-3">
-                <SelectCustom
-                    name="bus"
-                    type="select"
-                    label="Bus"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.bus"
-                    :value="formValues.bus"
-                    :errors="formValuesErrors.bus"
                 />
             </div>
 
@@ -102,9 +90,8 @@ import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
 import InputText from '@/components/InputText.vue'
 import InputDate from '@/components/InputDate.vue'
-import SelectCustom from '@/views/bus/Select.vue'
 
-import useDriver from '@/composables/useDriver'
+import usePassenger from '@/composables/usePassenger'
 
 import { getErrorsFromYup } from '@/helpers'
 
@@ -118,7 +105,6 @@ export default {
         ButtonCustom,
         InputText,
         InputDate,
-        SelectCustom,
     },
     setup(props, { emit, attrs }) {
 
@@ -136,7 +122,7 @@ export default {
             createFetchingData, 
             createErrors,
             create,
-        } = useDriver()
+        } = usePassenger()
 
         // document = models.CharField(max_length=15, unique=True)
         // names = models.CharField(max_length=50)
@@ -148,8 +134,7 @@ export default {
             names: yup.string().required().min(3).max(50),
             lastname: yup.string().required().min(3).max(50),
             date_of_birth: yup.date().required().max(new Date()),
-            bus: yup.number().required(),
-            is_active: yup.boolean(),
+            is_whitelist: yup.boolean(),
         });
 
         let formValues = reactive({
@@ -157,7 +142,7 @@ export default {
             // names: makeid(50),
             // lastname: makeid(15),
             date_of_birth: moment().format('YYYY-MM-DD'),
-            // is_active: true,
+            is_whitelist: true,
         });
 
         const formValuesErrors = ref({});

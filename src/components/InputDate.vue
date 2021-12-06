@@ -2,16 +2,40 @@
     <div class="">
         <label :for="name" class="form-label">{{ label }}</label>
         <div class="input-group mb-3">
-            <input
-                :name="name"
-                :type="type"
-                v-model="value"
-                :placeholder="placeholder"
-                @change="onChange"
-                @keyup="onChange"
-                class="form-control"
+            <template v-if="type=='datetime'">
+                <v-date-picker v-model="inputValue" mode="dateTime" is24hr
+                    :min-date='min' 
+                    :max-date='max' >
+                    <template v-slot="{ inputValue, inputEvents }">
+                        <input
+                            class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300"
+                            :value="inputValue"
+                            v-on="inputEvents"
+                        />
+                    </template>
+                </v-date-picker>
+            </template>
+            <template v-else>
+                <v-date-picker 
+                    v-model="inputValue" 
+                    mode="date" 
+                    is24hr 
+                    :min-date='min' 
+                    :max-date='max' 
+                    :masks="{
+                        input: 'DD/MM/YYYY HH:mm',
+                    }"
                 >
-                <slot name="buttons"></slot>
+                    <template v-slot="{ inputValue, inputEvents }">
+                        <input
+                            class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300"
+                            :value="inputValue"
+                            v-on="inputEvents"
+                            readonly
+                        />
+                    </template>
+                </v-date-picker>
+            </template>
             <div 
                 :class="[
                     (
@@ -44,6 +68,14 @@ export default {
             type: String,
             default: "",
         },
+        min: {
+            type: Object,
+            default: null,
+        },
+        max: {
+            type: Date,
+            default: null,
+        },
         name: {
             type: String,
             required: true,
@@ -74,17 +106,11 @@ export default {
         watch(
             () => inputValue.value,
             (inputValue, prevInputValue) => {
-                ctx.emit("update:modelValue", moment(inputValue).format('YYYY-MM-DD'));
+                ctx.emit("update:modelValue", moment(inputValue).startOf('minute').format('YYYY-MM-DD HH:mm'));
             }
         )
 
-        const onChange = (event) => {
-            const val = event.target.value;
-            ctx.emit("update:modelValue", val);
-        };
-
         return {
-            onChange,
             inputValue,
         };
     },

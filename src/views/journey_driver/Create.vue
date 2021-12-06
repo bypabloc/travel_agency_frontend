@@ -10,68 +10,56 @@
         @close="close"
     >
         <template v-slot:title>
-            <h5 class="modal-title font-weight-bold">Crear chofer</h5>
+            <h5 class="modal-title font-weight-bold">Crear viaje</h5>
         </template>
         <template v-slot:body>
             <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
 
             <div class="mb-3">
-                <InputText
-                    name="document"
-                    type="text"
-                    label="Documento"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.document"
-                    :value="formValues.document"
-                    :errors="formValuesErrors.document"
-                />
-            </div>
-            <div class="mb-3">
-                <InputText
-                    name="names"
-                    type="text"
-                    label="Nombres"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.names"
-                    :value="formValues.names"
-                    :errors="formValuesErrors.names"
-                />
-            </div>
-            <div class="mb-3">
-                <InputText
-                    name="lastname"
-                    type="text"
-                    label="Apellidos"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.lastname"
-                    :value="formValues.lastname"
-                    :errors="formValuesErrors.lastname"
-                />
-            </div>
-            <div class="mb-3">
-                <InputDate
-                    name="date_of_birth"
-                    type="date"
-                    :max="new Date()"
-                    label="Fecha de nacimiento"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.date_of_birth"
-                    :value="formValues.date_of_birth"
-                    :errors="formValuesErrors.date_of_birth"
-                />
-            </div>
-            <div class="mb-3">
-                <SelectCustom
-                    name="bus"
-                    type="select"
-                    label="Bus"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.bus"
-                    :value="formValues.bus"
-                    :errors="formValuesErrors.bus"
+                <JourneySelect
+                    name="journey"
+                    v-model.trim.lazy="formValues.journey"
+                    :value="formValues.journey"
+                    :errors="formValuesErrors.journey"
+                    @change="changeJourney"
+                    @unselect="changeJourney"
                 />
             </div>
 
+            <div class="mb-3">
+                <InputDate
+                    name="datetime_start"
+                    type="datetime"
+                    label="Fecha de salida"
+                    :min="new Date()"
+                    placeholder=""
+                    v-model.trim.lazy="formValues.datetime_start"
+                    :value="formValues.datetime_start"
+                    :errors="formValuesErrors.datetime_start"
+                />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label"
+                    style="font-weight: bold;"
+                    >Tiempo estimado de llegada</label>
+                <div class="input-group mb-3" v-if="formValues.datetime_start && formValues.journey_data">
+                    {{ moment(formValues.datetime_start, 'YYYY-MM-DD HH:mm').add(formValues.journey_data.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
+                </div>
+                <div v-else>
+                    Seleccione una fecha de salida para calcular la llegada
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <DriverSelect
+                    name="driver"
+                    label="Chofer"
+                    v-model.trim.lazy="formValues.driver"
+                    :value="formValues.driver"
+                    :errors="formValuesErrors.driver"
+                />
+            </div>
         </template>
         <template 
             v-slot:actions
@@ -100,11 +88,12 @@ import moment from 'moment';
 
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
-import InputText from '@/components/InputText.vue'
 import InputDate from '@/components/InputDate.vue'
-import SelectCustom from '@/views/bus/Select.vue'
 
-import useDriver from '@/composables/useDriver'
+import DriverSelect from '@/views/driver/Select.vue'
+import JourneySelect from '@/views/journey/Select.vue'
+
+import useJourneyDriver from '@/composables/useJourneyDriver'
 
 import { getErrorsFromYup } from '@/helpers'
 
@@ -116,48 +105,27 @@ export default {
     components:{
         Modal,
         ButtonCustom,
-        InputText,
         InputDate,
-        SelectCustom,
+        DriverSelect,
+        JourneySelect,
     },
     setup(props, { emit, attrs }) {
-
-        const makeid = (length) => {
-            let result             = '';
-            const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            const charactersLength = characters.length;
-            for ( let i = 0; i < length; i++ ) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-            return result;
-        }
 
         const {
             createFetchingData, 
             createErrors,
             create,
-        } = useDriver()
-
-        // document = models.CharField(max_length=15, unique=True)
-        // names = models.CharField(max_length=50)
-        // lastname = models.CharField(max_length=50)
-        // date_of_birth = models.DateField()
+        } = useJourneyDriver()
 
         const schemaCreate = yup.object().shape({
-            document: yup.string().required().min(3).max(15),
-            names: yup.string().required().min(3).max(50),
-            lastname: yup.string().required().min(3).max(50),
-            date_of_birth: yup.date().required().max(new Date()),
-            bus: yup.number().required(),
-            is_active: yup.boolean(),
+            datetime_start: yup.date().required(),
+            states: yup.number().required(),
+            journey: yup.number().required().positive('journey is a required field'),
+            driver: yup.number().required().positive('journey is a required field'),
         });
 
         let formValues = reactive({
-            // document: makeid(15),
-            // names: makeid(50),
-            // lastname: makeid(15),
-            date_of_birth: moment().format('YYYY-MM-DD'),
-            // is_active: true,
+            states: 1,
         });
 
         const formValuesErrors = ref({});
@@ -175,7 +143,7 @@ export default {
             for (const key in formValuesErrors.value) {
                 delete formValuesErrors.value[key]
             }
-            formValues['date_of_birth'] = moment().format('YYYY-MM-DD')
+            formValues['states'] = 1
         }
 
         const createEvent = async () => {
@@ -210,6 +178,16 @@ export default {
             
         }
 
+        const changeJourney = (e) => {
+            if(e){
+                console.log('changeJourney',e)
+                formValues['journey_data'] = e
+            }else{
+                delete formValues['journey_data']
+                console.log('Journey unselect')
+            }
+        }
+
         return {
             modal,
             open,
@@ -221,6 +199,9 @@ export default {
             createFetchingData,
 
             createEvent,
+
+            changeJourney,
+            moment,
         };
     },
 }
