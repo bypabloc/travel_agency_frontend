@@ -14,7 +14,6 @@
 import { ref } from 'vue'
 import NavBarCustom from './components/NavBarCustom.vue'
 import SideBarCustom from './components/SideBarCustom.vue'
-import HelloWorld from '@/components/HelloWorld.vue'
 import LoaderViews from '@/components/LoaderViews.vue'
 
 export default {
@@ -22,7 +21,6 @@ export default {
     components: {
         NavBarCustom,
         SideBarCustom,
-        HelloWorld,
         LoaderViews,
     },
     setup() {

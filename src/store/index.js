@@ -5,6 +5,7 @@ import bus from './bus'
 import driver from './driver'
 import location from './location'
 import journey from './journey'
+import passenger from './passenger'
 
 import { debug } from '@/helpers/getVars.js'
 
@@ -17,5 +18,6 @@ export default createStore({
         driver,
         location,
         journey,
+        passenger,
     },
 })

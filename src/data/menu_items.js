@@ -33,9 +33,9 @@ export default [
         name: 'Passenger',
         path: '/passengers',
         text: 'Clientes',
-        component: 'Passenger.vue',
+        component: 'passenger/Management',
         divider: true,
-        isActive: false,
+        isActive: true,
     },
     {
         name: 'Seat',
