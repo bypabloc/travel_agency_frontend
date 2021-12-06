@@ -71,12 +71,6 @@
                 />
             </div>
 
-            <pre>
-                <code>
-                    {{ formValues }}
-                </code>
-            </pre>
-
         </template>
         <template 
             v-slot:actions
@@ -156,11 +150,11 @@ export default {
         });
 
         let formValues = reactive({
-            document: makeid(15),
-            names: makeid(50),
-            lastname: makeid(15),
+            // document: makeid(15),
+            // names: makeid(50),
+            // lastname: makeid(15),
             date_of_birth: moment().format('YYYY-MM-DD'),
-            is_active: true,
+            // is_active: true,
         });
 
         const formValuesErrors = ref({});

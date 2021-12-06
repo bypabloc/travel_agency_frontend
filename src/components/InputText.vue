@@ -101,11 +101,7 @@ export default {
         )
 
         const onChange = (event) => {
-            console.log('event',event)
-
             const val = event.target.value;
-
-            // handleChange(val);
             ctx.emit("update:modelValue", val);
         };
 
