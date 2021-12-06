@@ -25,9 +25,9 @@ export default [
         name: 'Journey',
         path: '/journeys',
         text: 'Trayectos',
-        component: 'Journey.vue',
+        component: 'journey/Management',
         divider: true,
-        isActive: false,
+        isActive: true,
     },
     {
         name: 'Passenger',
