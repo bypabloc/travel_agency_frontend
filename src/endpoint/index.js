@@ -3,15 +3,16 @@ import axios from 'axios'
 const baseURL = process.env.MIX_APP_URL ?? 'http://127.0.0.1:8000/api/';
 const debug = process.env.MIX_APP_ENV === 'testing'
 
+const format = 'json';
+const tz_in_minutes = new Date().getTimezoneOffset();
+
 const headers = {
     'Content-Type' : 'application/json',
     Accept : 'application/json',
-    tz_in_minutes : new Date().getTimezoneOffset(),
+    tz_in_minutes,
     lg : navigator.language || navigator.userLanguage,
     device: navigator.userAgent,
 };
-
-const format = 'json';
 
 const instance = axios.create({
     mode: 'cors',
@@ -55,6 +56,7 @@ export default {
             params: {
                 ...params,
                 format,
+                tz_in_minutes,
             }
         })
     },
@@ -65,6 +67,7 @@ export default {
         const param_with_format = {
             ...params,
             format,
+            tz_in_minutes,
         }
         return instance.post(url,param_with_format)
     },

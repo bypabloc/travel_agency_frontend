@@ -22,7 +22,7 @@ export default {
         })
         .catch(err => {
             console.log('err',err)
-            commit(types.FETCH_FAILURE, { err: err.errors }) 
+            commit(types.LIST_FETCH_FAILURE, { err: err.errors }) 
             return Promise.reject(err);
         });
     },

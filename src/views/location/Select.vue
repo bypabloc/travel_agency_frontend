@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <label :for="name" class="form-label">Buses</label>
+        <label :for="name" class="form-label">Ubicaciones</label>
         <div class="input-group mb-3">
             <v-select
                 :options="listData.list"
@@ -100,7 +100,7 @@ import vSelect from 'vue-select'
 
 import { ref, onMounted, nextTick, computed, onBeforeMount } from 'vue'
 
-import useBus from '@/composables/useBus';
+import useLocation from '@/composables/useLocation';
 
 export default {
     name: 'SelectableInfiniteScroll',
@@ -144,7 +144,7 @@ export default {
             listData,
             setParams,
             getList,
-        } = useBus()
+        } = useLocation()
         
         const load = ref(null);
         const observer = ref(null);
