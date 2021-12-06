@@ -23,7 +23,7 @@
                 <tr v-for="row of list" :key="row.id">
                     <td v-for="column in columns" :key="column.field">
                         <div v-if="column.type === 'custom'">
-                            <slot name="custom" :data-row="row"></slot>
+                            <slot name="custom" :data-row="row" :data-field="column.field" :data-field-exact="row[column.field]"></slot>
                         </div>
                         <div v-else-if="column.type === 'text'">
                             <template v-if="column?.limit">
@@ -90,6 +90,9 @@
                         </div>
                         <div v-else-if="column.type === 'datetime-ago'">
                             {{ dateTimeAgo(propFromString(column, row[column.field])) }}
+                        </div>
+                        <div v-else-if="column.type === 'datetime'">
+                            {{ dateTime(propFromString(column, row[column.field])) }}
                         </div>
                         <div v-else-if="column.type === 'seconds-to-time'">
                             {{ secondsToHHMMSS( row[column.field] * 1000 ) }}
@@ -190,6 +193,9 @@ export default {
         },
         dateAge(value) {
             return moment().diff(value, 'years');
+        },
+        dateTime(value) {
+            return value ? moment(value+'-00:00').format('DD/MM/YYYY HH:mm:ss') : '';
         },
         dateTimeAgo(value) {
             return value ? moment(value+'-00:00').local().fromNow(true) : '';

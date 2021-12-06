@@ -69,6 +69,10 @@ export default {
             format,
             tz_in_minutes,
         }
-        return instance.post(url,param_with_format)
+        return instance.post(url,param_with_format,{
+            params: {
+                tz_in_minutes,
+            }
+        })
     },
 }

@@ -44,20 +44,19 @@
                                         },
                                         {
                                             field: 'datetime_start',
-                                            label: 'datetime_start',
-                                            type: 'text',
+                                            label: 'Hora de Salida',
+                                            type: 'datetime',
+                                            format: 'DD/MM/YYYY HH:mm:ss',
                                         },
                                         {
+                                            label: 'Chofer',
                                             field: 'driver',
-                                            label: 'driver',
-                                            type: 'text',
-                                            limit: 10,
+                                            type: 'custom',
                                         },
                                         {
+                                            label: 'Trayecto',
                                             field: 'journey',
-                                            label: 'journey',
-                                            type: 'text',
-                                            limit: 10,
+                                            type: 'custom',
                                         },
                                         {
                                             label: 'states',
@@ -79,12 +78,31 @@
                                     :per_page="listParams.per_page"
                                     @update="updateList"
                                 >
-                                    <template v-slot:custom="{ dataRow }">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" :checked="dataRow.states" @change="state_change({
-                                                active: $event.target.checked,
-                                                id: dataRow.id,
-                                            })">
+                                    <template v-slot:custom="{ dataRow, dataField, dataFieldExact }">
+                                        <div v-if="dataField == 'journey'">
+                                            {{ dataFieldExact.location_origin.name }} -
+                                            {{ dataFieldExact.location_destination.name }}
+                                            <br>
+                                            Tiempo estimado: 
+                                            {{ secondsToHHMMSS(dataFieldExact.duration_in_seconds*1000) }}
+                                        </div>
+                                        <div v-else-if="dataField == 'driver'">
+                                            Documento: {{ dataFieldExact.document.substring(0,10) }}
+                                            <br>
+                                            Nombres: {{ dataFieldExact.names.substring(0,10) }}
+                                            <br>
+                                            Apellidos: {{ dataFieldExact.lastname.substring(0,10) }}
+                                        </div>
+                                        <div v-else-if="dataField == 'states'">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" :checked="dataRow.states" @change="state_change({
+                                                    active: $event.target.checked,
+                                                    id: dataRow.id,
+                                                })">
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            {{ dataFieldExact }}
                                         </div>
                                     </template>
                                 </TableCustom>
@@ -162,6 +180,25 @@ export default {
             modal_create.value.open();
         }
 
+        const secondsToHHMMSS = (count) => {
+            const _second = 1000;
+            const _minute = _second * 60;
+            const _hour = _minute * 60;
+            const _day = _hour * 24;
+
+            const days = Math.floor(count / _day);
+            const hours = Math.floor((count % _day) / _hour);
+            const minutes = Math.floor((count % _hour) / _minute);
+            const seconds = Math.floor((count % _minute) / _second);
+
+            return `
+                ${days ? (days>9 ? days : '0'+days)+':' : ''}
+                ${hours ? (hours>9 ? hours : '0'+hours)+':' : (days ? '00' : '')}
+                ${minutes ? (minutes>9 ? minutes : ':0'+minutes)+':' : (hours ? '00' : '')}
+                ${seconds ? (seconds>9 ? seconds : ':0'+seconds) : (minutes ? '00' : '')}
+            `.replace(/ /g,'').replace(/(\r\n|\n|\r)/gm,'');
+        }
+
         return {
             listFetchingData,
             listErrors,
@@ -172,6 +209,7 @@ export default {
             modalEvent,
             modal_create,
             state_change,
+            secondsToHHMMSS,
         }
     },
 }

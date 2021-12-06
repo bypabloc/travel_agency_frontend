@@ -3,22 +3,14 @@
         <label :for="name" class="form-label">{{ label }}</label>
         <div class="input-group mb-3">
             <template v-if="type=='datetime'">
-                <v-date-picker 
-                    v-model="inputValue" 
-                    mode="dateTime"
-                    is24hr 
+                <v-date-picker v-model="inputValue" mode="dateTime" is24hr
                     :min-date='min' 
-                    :max-date='max' 
-                    :masks="{
-                        input: 'DD-MM-YYYY',
-                    }"
-                >
+                    :max-date='max' >
                     <template v-slot="{ inputValue, inputEvents }">
                         <input
                             class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300"
                             :value="inputValue"
                             v-on="inputEvents"
-                            readonly
                         />
                     </template>
                 </v-date-picker>
@@ -31,7 +23,7 @@
                     :min-date='min' 
                     :max-date='max' 
                     :masks="{
-                        input: 'DD-MM-YYYY',
+                        input: 'DD/MM/YYYY HH:mm',
                     }"
                 >
                     <template v-slot="{ inputValue, inputEvents }">
@@ -77,7 +69,7 @@ export default {
             default: "",
         },
         min: {
-            type: Date,
+            type: Object,
             default: null,
         },
         max: {
@@ -114,7 +106,7 @@ export default {
         watch(
             () => inputValue.value,
             (inputValue, prevInputValue) => {
-                ctx.emit("update:modelValue", moment(inputValue).format('YYYY-MM-DD'));
+                ctx.emit("update:modelValue", moment(inputValue).startOf('minute').format('YYYY-MM-DD HH:mm'));
             }
         )
 

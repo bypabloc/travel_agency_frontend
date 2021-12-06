@@ -31,6 +31,16 @@
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Cargando items...
                     </li>
+                    <!-- <li 
+                        class="loader"
+                        :style="{
+                            'display': 'flex',
+                            'justify-content': 'center',
+                            'align-content': 'center',
+                        }"
+                        >
+                        Agregar
+                    </li> -->
                 </template>
 
                 <template v-slot:no-options>

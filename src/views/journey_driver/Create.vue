@@ -40,6 +40,18 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-label"
+                    style="font-weight: bold;"
+                    >Tiempo estimado de llegada</label>
+                <div class="input-group mb-3" v-if="formValues.datetime_start && formValues.journey_data">
+                    {{ moment(formValues.datetime_start, 'YYYY-MM-DD HH:mm').add(formValues.journey_data.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
+                </div>
+                <div v-else>
+                    Seleccione una fecha de salida para calcular la llegada
+                </div>
+            </div>
+
+            <div class="mb-3">
                 <DriverSelect
                     name="driver"
                     label="Chofer"
@@ -48,6 +60,8 @@
                     :errors="formValuesErrors.driver"
                 />
             </div>
+
+            {{ moment(moment().format('DD/MM/YYYY HH:mm:ss'), 'DD/MM/YYYY HH:mm:ss') }}
 
             {{ formValues }}
 
@@ -108,13 +122,8 @@ export default {
             create,
         } = useJourneyDriver()
 
-        // document = models.CharField(max_length=15, unique=True)
-        // names = models.CharField(max_length=50)
-        // lastname = models.CharField(max_length=50)
-        // date_of_birth = models.DateField()
-
         const schemaCreate = yup.object().shape({
-            datetime_start: yup.date().required().min(new Date()),
+            datetime_start: yup.date().required(),
             states: yup.number().required(),
             journey: yup.number().required().positive('journey is a required field'),
             driver: yup.number().required().positive('journey is a required field'),
@@ -175,7 +184,13 @@ export default {
         }
 
         const changeJourney = (e) => {
-            console.log('changeJourney',e)
+            if(e){
+                console.log('changeJourney',e)
+                formValues['journey_data'] = e
+            }else{
+                delete formValues['journey_data']
+                console.log('Journey unselect')
+            }
         }
 
         return {
@@ -191,6 +206,7 @@ export default {
             createEvent,
 
             changeJourney,
+            moment,
         };
     },
 }

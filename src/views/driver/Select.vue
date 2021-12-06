@@ -31,12 +31,45 @@
                 </template>
 
                 <template v-slot:option="item">
-                    {{ item }}
+                    Documento: {{ item.document }}
+                    <br>
+                    Nombres: {{ item.names }}
+                    <br>
+                    Apellidos: {{ item.lastname }}
+                    <br>
+                    Fecha de nacimiento: {{ item.date_of_birth }}
+                    <br>
+                    <br>
+                    - Bus:
+                    <br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Placa: {{ item.bus.plate }}
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Color: <span 
+                        :style="{
+                            height: '25px',
+                            width: '25px',
+                            'background-color': item.bus.color,
+                            borderRadius: '50%',
+                            display: 'inline-block',
+                        }"
+                    ></span>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Marca: {{ item.bus.brand }}
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Modelo: {{ item.bus.model }}
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Serial: {{ item.bus.serial }}
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Año: {{ item.bus.year }}
                 </template>
 
                 <template v-slot:selected-option="item">
                     <div class="selected d-center">
-                        {{ item }}
+                        Documento: {{ item.document.substring(0,10) }}
+                        <br>
+                        Nombres: {{ item.names.substring(0,10) }}
+                        <br>
+                        Apellidos: {{ item.lastname.substring(0,10) }}
                     </div>
                 </template>
 
