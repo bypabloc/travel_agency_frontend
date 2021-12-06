@@ -2,20 +2,42 @@
     <div class="">
         <label :for="name" class="form-label">{{ label }}</label>
         <div class="input-group mb-3">
-            <input 
-                :name="name"
-                :type="type"
-                v-model="value"
-                :placeholder="placeholder"
-                @change="onChange"
-                @keyup="onChange"
-                class="form-control"
+            <template v-if="type=='date'">
+                <v-date-picker 
+                    v-model="inputValue" 
+                    mode="date" 
+                    is24hr 
+                    :max-date='new Date()' 
+                    :masks="{
+                        input: 'DD-MM-YYYY',
+                    }"
                 >
-                <slot name="buttons"></slot>
+                    <template v-slot="{ inputValue, inputEvents }">
+                        <input
+                            class="px-2 py-1 border rounded focus:outline-none focus:border-blue-300"
+                            :value="inputValue"
+                            v-on="inputEvents"
+                            readonly
+                        />
+                    </template>
+                </v-date-picker>
+            </template>
+            <template v-else>
+                <input
+                    :name="name"
+                    :type="type"
+                    v-model="value"
+                    :placeholder="placeholder"
+                    @change="onChange"
+                    @keyup="onChange"
+                    class="form-control"
+                    >
+                    <slot name="buttons"></slot>
+            </template>
             <div 
                 :class="[
                     (
-                       errors.length ? 'invalid-feedback-custom-label ' : ''
+                    errors.length ? 'invalid-feedback-custom-label ' : ''
                     ),
                 ]"
                 v-if="errors.length"
@@ -31,6 +53,9 @@
 </template>
 
 <script>
+import { watch, ref } from 'vue'
+import moment from 'moment';
+
 export default {
     props: {
         type: {
@@ -64,9 +89,20 @@ export default {
     },
     setup(props, ctx) {
 
-        // const { value: inputValue } = props
+        const { value } = props
+
+        const inputValue = ref(value)
+
+        watch(
+            () => inputValue.value,
+            (inputValue, prevInputValue) => {
+                ctx.emit("update:modelValue", moment(inputValue).format('YYYY-MM-DD'));
+            }
+        )
 
         const onChange = (event) => {
+            console.log('event',event)
+
             const val = event.target.value;
 
             // handleChange(val);
@@ -75,7 +111,7 @@ export default {
 
         return {
             onChange,
-            // inputValue,
+            inputValue,
         };
     },
 };

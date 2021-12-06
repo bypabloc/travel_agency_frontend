@@ -85,6 +85,12 @@
                                 }"
                             ></span>
                         </div>
+                        <div v-else-if="column.type === 'date'">
+                            {{ dateFormat(row[column.field]) }} ( {{ dateAge(row[column.field]) }} años )
+                        </div>
+                        <div v-else-if="column.type === 'datetime-ago'">
+                            {{ dateTimeAgo(row[column.field]) }}
+                        </div>
                         <div v-else>
                             {{ row[column.field] }}
                         </div>
@@ -105,6 +111,10 @@
 </template>
 
 <script>
+
+import moment from 'moment';
+moment.locale('es');
+
 
 export const props = {
     columns: {
@@ -171,6 +181,15 @@ export default {
                 show_less.style.display = "";
                 show_more.style.display = "none";
             }
+        },
+        dateFormat(value) {
+            return moment(value).format('DD-MM-YYYY');
+        },
+        dateAge(value) {
+            return moment().diff(value, 'years');
+        },
+        dateTimeAgo(value) {
+            return value ? moment(value+'-00:00').local().fromNow(true) : '';
         },
     },
     created() {

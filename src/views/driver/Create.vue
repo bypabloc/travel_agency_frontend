@@ -10,77 +10,63 @@
         @close="close"
     >
         <template v-slot:title>
-            <h5 class="modal-title font-weight-bold">Crear bus</h5>
+            <h5 class="modal-title font-weight-bold">Crear chofer</h5>
         </template>
         <template v-slot:body>
             <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
 
             <div class="mb-3">
                 <InputText
-                    name="plate"
+                    name="document"
                     type="text"
-                    label="Placa"
+                    label="Documento"
                     placeholder=""
-                    v-model.trim.lazy="formValues.plate"
-                    :value="formValues.plate"
-                    :errors="formValuesErrors.plate"
+                    v-model.trim.lazy="formValues.document"
+                    :value="formValues.document"
+                    :errors="formValuesErrors.document"
                 />
             </div>
             <div class="mb-3">
                 <InputText
-                    name="color"
-                    type="color"
-                    label="Color"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.color"
-                    :value="formValues.color"
-                    :errors="formValuesErrors.color"
-                />
-            </div>
-            <div class="mb-3">
-                <InputText
-                    name="brand"
+                    name="names"
                     type="text"
-                    label="Marca"
+                    label="Nombres"
                     placeholder=""
-                    v-model.trim.lazy="formValues.brand"
-                    :value="formValues.brand"
-                    :errors="formValuesErrors.brand"
+                    v-model.trim.lazy="formValues.names"
+                    :value="formValues.names"
+                    :errors="formValuesErrors.names"
                 />
             </div>
             <div class="mb-3">
                 <InputText
-                    name="model"
+                    name="lastname"
                     type="text"
-                    label="Modelo"
+                    label="Apellidos"
                     placeholder=""
-                    v-model.trim.lazy="formValues.model"
-                    :value="formValues.model"
-                    :errors="formValuesErrors.model"
+                    v-model.trim.lazy="formValues.lastname"
+                    :value="formValues.lastname"
+                    :errors="formValuesErrors.lastname"
                 />
             </div>
             <div class="mb-3">
                 <InputText
-                    name="serial"
-                    type="text"
-                    label="Serial"
+                    name="date_of_birth"
+                    type="date"
+                    label="Fecha de nacimiento"
                     placeholder=""
-                    v-model.trim.lazy="formValues.serial"
-                    :value="formValues.serial"
-                    :errors="formValuesErrors.serial"
+                    v-model.trim.lazy="formValues.date_of_birth"
+                    :value="formValues.date_of_birth"
+                    :errors="formValuesErrors.date_of_birth"
                 />
             </div>
-            <div class="mb-3">
-                <InputText
-                    name="year"
-                    type="number"
-                    label="Año"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.year"
-                    :value="formValues.year"
-                    :errors="formValuesErrors.year"
-                />
-            </div>
+            <SelectCustom/>
+
+            <pre>
+                <code>
+                    {{ formValues }}
+                </code>
+            </pre>
+
         </template>
         <template 
             v-slot:actions
@@ -105,12 +91,14 @@
 import { ref, reactive } from 'vue'
 
 import * as yup from 'yup';
+import moment from 'moment';
 
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
 import InputText from '@/components/InputText.vue'
+import SelectCustom from '@/components/Select.vue'
 
-import useBus from '@/composables/useBus'
+import useDriver from '@/composables/useDriver'
 
 import { getErrorsFromYup } from '@/helpers'
 
@@ -123,6 +111,7 @@ export default {
         Modal,
         ButtonCustom,
         InputText,
+        SelectCustom,
     },
     setup(props, { emit, attrs }) {
 
@@ -140,26 +129,27 @@ export default {
             createFetchingData, 
             createErrors,
             create,
-        } = useBus()
+        } = useDriver()
+
+        // document = models.CharField(max_length=15, unique=True)
+        // names = models.CharField(max_length=50)
+        // lastname = models.CharField(max_length=50)
+        // date_of_birth = models.DateField()
 
         const schemaCreate = yup.object().shape({
-            plate: yup.string().required().min(3).max(10),
-            color: yup.string().required().min(6).max(7),
-            brand: yup.string().required().min(3).max(50),
-            model: yup.string().required().min(3).max(50),
-            serial: yup.string().required().min(3).max(100),
-            year: yup.number().required().min(1900).max(new Date().getFullYear() + 1),
+            document: yup.string().required().min(3).max(15),
+            names: yup.string().required().min(3).max(50),
+            lastname: yup.string().required().min(3).max(50),
+            date_of_birth: yup.date().required().max(new Date()),
             is_active: yup.boolean(),
         });
 
         let formValues = reactive({
-            // plate: makeid(10),
-            // color: '#000000',
-            // brand: makeid(30),
-            // model: makeid(25),
-            // serial: makeid(100),
-            // year: `${new Date().getFullYear()}`,
-            // is_active: true,
+            document: makeid(15),
+            names: makeid(50),
+            lastname: makeid(15),
+            date_of_birth: moment().format('YYYY-MM-DD'),
+            is_active: true,
         });
 
         const formValuesErrors = ref({});
@@ -177,15 +167,7 @@ export default {
             for (const key in formValuesErrors.value) {
                 delete formValuesErrors.value[key]
             }
-            // formValues = reactive({
-            //     plate: makeid(10),
-            //     color: '#000000',
-            //     brand: makeid(30),
-            //     model: makeid(25),
-            //     serial: makeid(100),
-            //     year: `${new Date().getFullYear()}`,
-            //     is_active: true,
-            // });
+            formValues['date_of_birth'] = moment().format('YYYY-MM-DD')
         }
 
         const createEvent = async () => {

@@ -5,7 +5,6 @@
             <NavBarCustom/>
             <div class="container">
                 <LoaderViews/>
-                <div class="line"></div>
             </div>
         </div>
     </div>

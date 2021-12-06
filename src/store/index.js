@@ -2,6 +2,7 @@ import { createStore, createLogger } from 'vuex'
 
 import config from './config'
 import bus from './bus'
+import driver from './driver'
 
 import { debug } from '@/helpers/getVars.js'
 
@@ -11,5 +12,6 @@ export default createStore({
     modules: {
         config,
         bus,
+        driver,
     },
 })
