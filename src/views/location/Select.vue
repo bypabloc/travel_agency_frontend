@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <label :for="name" class="form-label">Ubicaciones</label>
+        <label :for="name" class="form-label">{{ label || 'Ubicaciones'  }}</label>
         <div class="input-group mb-3">
             <v-select
                 :options="listData.list"
@@ -31,48 +31,12 @@
                 </template>
 
                 <template v-slot:option="item">
-                    Placa: {{ item.plate }}
-                    <br>
-                    Color: <span 
-                        :style="{
-                            height: '25px',
-                            width: '25px',
-                            'background-color': item.color,
-                            borderRadius: '50%',
-                            display: 'inline-block',
-                        }"
-                    ></span>
-                    <br>
-                    Marca: {{ item.brand }}
-                    <br>
-                    Modelo: {{ item.model }}
-                    <br>
-                    Serial: {{ item.serial }}
-                    <br>
-                    Año: {{ item.year }}
+                    {{ item.name }}
                 </template>
 
                 <template v-slot:selected-option="item">
                     <div class="selected d-center">
-                        Placa: {{ item.plate }}
-                        <br>
-                        Color: <span 
-                            :style="{
-                                height: '25px',
-                                width: '25px',
-                                'background-color': item.color,
-                                borderRadius: '50%',
-                                display: 'inline-block',
-                            }"
-                        ></span>
-                        <br>
-                        Marca: {{ item.brand }}
-                        <br>
-                        Modelo: {{ item.model }}
-                        <br>
-                        Serial: {{ item.serial }}
-                        <br>
-                        Año: {{ item.year }}
+                        {{ item.name }}
                     </div>
                 </template>
 

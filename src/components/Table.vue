@@ -91,6 +91,9 @@
                         <div v-else-if="column.type === 'datetime-ago'">
                             {{ dateTimeAgo(propFromString(column, row[column.field])) }}
                         </div>
+                        <div v-else-if="column.type === 'seconds-to-time'">
+                            {{ secondsToHHMMSS( row[column.field] * 1000 ) }}
+                        </div>
                         <div v-else>
                             {{ propFromString(column, row[column.field]) }}
                         </div>
@@ -201,6 +204,24 @@ export default {
                 result = data
             }
             return result
+        },
+        secondsToHHMMSS(count) {
+            const _second = 1000;
+            const _minute = _second * 60;
+            const _hour = _minute * 60;
+            const _day = _hour * 24;
+
+            const days = Math.floor(count / _day);
+            const hours = Math.floor((count % _day) / _hour);
+            const minutes = Math.floor((count % _hour) / _minute);
+            const seconds = Math.floor((count % _minute) / _second);
+
+            return `
+                ${days ? (days>9 ? days : '0'+days)+':' : ''}
+                ${hours ? (hours>9 ? hours : '0'+hours)+':' : (days ? '00' : '')}
+                ${minutes ? (minutes>9 ? minutes : ':0'+minutes)+':' : (hours ? '00' : '')}
+                ${seconds ? (seconds>9 ? seconds : ':0'+seconds) : (minutes ? '00' : '')}
+            `.replace(/ /g,'').replace(/(\r\n|\n|\r)/gm,'');
         },
     },
     created() {

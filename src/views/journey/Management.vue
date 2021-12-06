@@ -57,6 +57,11 @@
                                             limit: 10,
                                         },
                                         {
+                                            field: 'duration_in_seconds',
+                                            label: 'Duración en segundos',
+                                            type: 'seconds-to-time',
+                                        },
+                                        {
                                             label: 'Activo',
                                             field: 'is_active',
                                             type: 'custom',
