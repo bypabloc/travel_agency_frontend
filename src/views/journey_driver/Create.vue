@@ -16,6 +16,17 @@
             <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
 
             <div class="mb-3">
+                <JourneySelect
+                    name="journey"
+                    v-model.trim.lazy="formValues.journey"
+                    :value="formValues.journey"
+                    :errors="formValuesErrors.journey"
+                    @change="changeJourney"
+                    @unselect="changeJourney"
+                />
+            </div>
+
+            <div class="mb-3">
                 <InputDate
                     name="datetime_start"
                     type="datetime"
@@ -37,6 +48,8 @@
                     :errors="formValuesErrors.driver"
                 />
             </div>
+
+            {{ formValues }}
 
         </template>
         <template 
@@ -69,6 +82,7 @@ import ButtonCustom from '@/components/Button.vue'
 import InputDate from '@/components/InputDate.vue'
 
 import DriverSelect from '@/views/driver/Select.vue'
+import JourneySelect from '@/views/journey/Select.vue'
 
 import useJourneyDriver from '@/composables/useJourneyDriver'
 
@@ -84,6 +98,7 @@ export default {
         ButtonCustom,
         InputDate,
         DriverSelect,
+        JourneySelect,
     },
     setup(props, { emit, attrs }) {
 
@@ -101,8 +116,8 @@ export default {
         const schemaCreate = yup.object().shape({
             datetime_start: yup.date().required().min(new Date()),
             states: yup.number().required(),
-            journey: yup.number().required(),
-            driver: yup.number().required(),
+            journey: yup.number().required().positive('journey is a required field'),
+            driver: yup.number().required().positive('journey is a required field'),
         });
 
         let formValues = reactive({
@@ -124,7 +139,7 @@ export default {
             for (const key in formValuesErrors.value) {
                 delete formValuesErrors.value[key]
             }
-            formValues['date_of_birth'] = moment().format('YYYY-MM-DD')
+            formValues['states'] = 1
         }
 
         const createEvent = async () => {
@@ -159,6 +174,10 @@ export default {
             
         }
 
+        const changeJourney = (e) => {
+            console.log('changeJourney',e)
+        }
+
         return {
             modal,
             open,
@@ -170,6 +189,8 @@ export default {
             createFetchingData,
 
             createEvent,
+
+            changeJourney,
         };
     },
 }

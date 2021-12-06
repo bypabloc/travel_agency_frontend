@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <label :for="name" class="form-label">Buses</label>
+        <label :for="name" class="form-label">Trayecto</label>
         <div class="input-group mb-3">
             <v-select
                 :options="listData.list"
@@ -11,6 +11,13 @@
                 }"
                 
                 @option:selected="onChange"
+                @option:deselecting="onChange"
+                @option:deselected="onChange"
+                @onChange="onChange"
+                @input="onChange"
+                @click="onChange"
+                @change="onChange"
+                
                 @open="onOpen"
                 @close="onClose"
                 
@@ -31,48 +38,14 @@
                 </template>
 
                 <template v-slot:option="item">
-                    Placa: {{ item.plate }}
-                    <br>
-                    Color: <span 
-                        :style="{
-                            height: '25px',
-                            width: '25px',
-                            'background-color': item.color,
-                            borderRadius: '50%',
-                            display: 'inline-block',
-                        }"
-                    ></span>
-                    <br>
-                    Marca: {{ item.brand }}
-                    <br>
-                    Modelo: {{ item.model }}
-                    <br>
-                    Serial: {{ item.serial }}
-                    <br>
-                    Año: {{ item.year }}
+                    Nombre: {{ item.location_origin_data.name }} - {{ item.location_destination_data.name }}
+                    <br/>
+                    Duración: {{ secondsToHHMMSS(item.duration_in_seconds*1000) }}
                 </template>
 
                 <template v-slot:selected-option="item">
                     <div class="selected d-center">
-                        Placa: {{ item.plate }}
-                        <br>
-                        Color: <span 
-                            :style="{
-                                height: '25px',
-                                width: '25px',
-                                'background-color': item.color,
-                                borderRadius: '50%',
-                                display: 'inline-block',
-                            }"
-                        ></span>
-                        <br>
-                        Marca: {{ item.brand }}
-                        <br>
-                        Modelo: {{ item.model }}
-                        <br>
-                        Serial: {{ item.serial }}
-                        <br>
-                        Año: {{ item.year }}
+                        {{ item.location_origin_data.name }} - {{ item.location_destination_data.name }}
                     </div>
                 </template>
 
@@ -98,9 +71,9 @@
 <script>
 import vSelect from 'vue-select'
 
-import { ref, onMounted, nextTick, computed, onBeforeMount } from 'vue'
+import { ref, onMounted, nextTick, computed, onBeforeMount, watch } from 'vue'
 
-import useBus from '@/composables/useBus';
+import useJourney from '@/composables/useJourney';
 
 export default {
     name: 'SelectableInfiniteScroll',
@@ -144,12 +117,25 @@ export default {
             listData,
             setParams,
             getList,
-        } = useBus()
+        } = useJourney()
         
         const load = ref(null);
         const observer = ref(null);
         const limit = ref(10);
         const search = ref('');
+
+        const { value } = props
+
+        const inputValue = ref(value)
+
+        watch(
+            () => inputValue.value,
+            (inputValue, prevInputValue) => {
+                console.log('inputValue',inputValue)
+            }
+        )
+
+        console.log('inputValue',inputValue)
         
         const infiniteScroll = async ([{ isIntersecting, target }]) => {
             if (isIntersecting) {
@@ -185,7 +171,7 @@ export default {
             }
         }
 
-        const onClose = async () => {
+        const onClose = async (e) => {
             observer.value.disconnect()
         }
 
@@ -215,9 +201,44 @@ export default {
             observer.value = new IntersectionObserver(infiniteScroll)
         })
 
-        const onChange = ({ id }) => {
-            ctx.emit("update:modelValue", `${id}`);
+        const onChange = (e) => {
+            if(!e?.id){
+                console.log('onChange',e)
+                const path = e.path
+                for (const el of path) {
+                    if(el.tagName == 'BUTTON'){
+                        if(el.classList.contains('vs__clear')){
+                            ctx.emit("update:modelValue", `${0}`);
+                            ctx.emit("change");
+                        }
+                    }
+                }
+            }else{
+                console.log("update:modelValue")
+                ctx.emit("update:modelValue", `${e.id}`);
+                ctx.emit("change", e);
+            }
         };
+
+
+        const secondsToHHMMSS = (count) => {
+            const _second = 1000;
+            const _minute = _second * 60;
+            const _hour = _minute * 60;
+            const _day = _hour * 24;
+
+            const days = Math.floor(count / _day);
+            const hours = Math.floor((count % _day) / _hour);
+            const minutes = Math.floor((count % _hour) / _minute);
+            const seconds = Math.floor((count % _minute) / _second);
+
+            return `
+                ${days ? (days>9 ? days : '0'+days)+':' : ''}
+                ${hours ? (hours>9 ? hours : '0'+hours)+':' : (days ? '00' : '')}
+                ${minutes ? (minutes>9 ? minutes : ':0'+minutes)+':' : (hours ? '00' : '')}
+                ${seconds ? (seconds>9 ? seconds : ':0'+seconds) : (minutes ? '00' : '')}
+            `.replace(/ /g,'').replace(/(\r\n|\n|\r)/gm,'');
+        }
 
         return {
             onChange,
@@ -228,6 +249,7 @@ export default {
             hasNextPage,
             listData,
             listErrors,
+            secondsToHHMMSS,
         };
     },
 };

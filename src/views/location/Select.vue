@@ -86,7 +86,7 @@ export default {
         },
         label: {
             type: String,
-            required: true,
+            default: null,
         },
         successMessage: {
             type: String,
