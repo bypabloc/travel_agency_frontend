@@ -49,9 +49,10 @@
                 />
             </div>
             <div class="mb-3">
-                <InputText
+                <InputDate
                     name="date_of_birth"
                     type="date"
+                    :max="new Date()"
                     label="Fecha de nacimiento"
                     placeholder=""
                     v-model.trim.lazy="formValues.date_of_birth"
@@ -100,6 +101,7 @@ import moment from 'moment';
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
 import InputText from '@/components/InputText.vue'
+import InputDate from '@/components/InputDate.vue'
 import SelectCustom from '@/views/bus/Select.vue'
 
 import useDriver from '@/composables/useDriver'
@@ -115,6 +117,7 @@ export default {
         Modal,
         ButtonCustom,
         InputText,
+        InputDate,
         SelectCustom,
     },
     setup(props, { emit, attrs }) {

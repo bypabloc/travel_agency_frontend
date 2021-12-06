@@ -48,8 +48,8 @@ export default [
         name: 'JourneyDriver',
         path: '/journeys_drivers',
         text: 'Viajes',
-        component: 'JourneyDriver.vue',
-        isActive: false,
+        component: 'journey_driver/Management',
+        isActive: true,
     },
     {
         name: 'Ticket',
