@@ -1,7 +1,6 @@
 import axios from 'axios'
 
-const baseURL = process.env.MIX_APP_URL ?? 'http://127.0.0.1:8000/api/';
-const debug = process.env.MIX_APP_ENV === 'testing'
+const baseURL = process.env.VUE_APP_ENDPOINT_URL ?? 'http://127.0.0.1:8000/api/';
 
 const format = 'json';
 const tz_in_minutes = new Date().getTimezoneOffset();

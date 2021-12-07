@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "vue-cli-service build --mode development",
-    "devw": "vue-cli-service serve --mode development --watch ",
-    "lint": "vue-cli-service lint",
-    "serve": "vue-cli-service serve",
+    "devb": "vue-cli-service build --mode development",
+    "devbw": "vue-cli-service serve --mode development --watch ",
+    "devs": "vue-cli-service serve --mode development",
+    "devsw": "vue-cli-service serve --mode development --watch ",
     "build": "vue-cli-service build"
   },
   "dependencies": {
