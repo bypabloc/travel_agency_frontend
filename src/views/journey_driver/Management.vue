@@ -44,7 +44,7 @@
                                         },
                                         {
                                             label: 'Trayecto',
-                                            field: 'journey',
+                                            field: 'journey_data',
                                             type: 'custom',
                                         },
                                         {
@@ -60,7 +60,7 @@
                                         },
                                         {
                                             label: 'Chofer',
-                                            field: 'driver',
+                                            field: 'driver_data',
                                             type: 'custom',
                                         },
                                         {
@@ -84,7 +84,7 @@
                                     @update="updateList"
                                 >
                                     <template v-slot:custom="{ dataRow, dataField, dataFieldExact }">
-                                        <div v-if="dataField == 'journey'">
+                                        <div v-if="dataField == 'journey_data'">
                                             {{ dataFieldExact.location_origin.name }} -
                                             {{ dataFieldExact.location_destination.name }}
                                             <br>
@@ -92,9 +92,9 @@
                                             {{ secondsToHHMMSS(dataFieldExact.duration_in_seconds*1000) }}
                                         </div>
                                         <div v-else-if="dataField == 'estimated_time'">
-                                            {{ moment(dataRow.datetime_start+'-00:00').local().add(dataRow.journey.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
+                                            {{ moment(dataRow.datetime_start+'-00:00').local().add(dataRow.journey_data.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
                                         </div>
-                                        <div v-else-if="dataField == 'driver'">
+                                        <div v-else-if="dataField == 'driver_data'">
                                             Documento: {{ dataFieldExact.document.substring(0,10) }}
                                             <br>
                                             Nombres: {{ dataFieldExact.names.substring(0,10) }}
@@ -117,7 +117,7 @@
                                         </div>
                                         <div v-else>
                                             {{ dataFieldExact }}
-                                        </div>
+                                        </div> 
                                     </template>
                                 </TableCustom>
                                 <PaginationCustom
