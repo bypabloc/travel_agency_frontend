@@ -76,7 +76,7 @@
                                 >
                                     <template v-slot:custom="{ dataRow }">
                                         <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" :checked="dataRow.is_active" @change="state_change({
+                                            <input class="form-check-input" type="checkbox" :checked="dataRow.is_active" @click.stop.prevent="state_change({
                                                 active: $event.target.checked,
                                                 id: dataRow.id,
                                             })">
@@ -114,6 +114,7 @@ import PaginationCustom from '@/components/Pagination.vue'
 import Create from './Create.vue'
 
 import useSeat from '@/composables/useSeat';
+import { useSwal } from '@/composables/useSwal';
 
 export default {
     name: 'BusManagement',
@@ -124,6 +125,8 @@ export default {
         Create,
     },
     setup() {
+
+        const Swal = useSwal();
 
         const {
             listFetchingData,
@@ -148,9 +151,14 @@ export default {
         }
 
         const state_change = ({id, active}) => {
-            setStateChange({id, active}).then(getList).catch(err => {
-                console.log('error',err)
-                // setStateChange({id, active: !active})
+            console.log('state_change',id, active)
+            setStateChange({id, active}).then(getList).catch(({errors}) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: errors.active,
+                })
+                getList()
             })
             
         }
