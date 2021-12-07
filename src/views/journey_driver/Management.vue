@@ -102,12 +102,18 @@
                                             Apellidos: {{ dataFieldExact.lastname.substring(0,10) }}
                                         </div>
                                         <div v-else-if="dataField == 'states'">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" :checked="dataRow.states" @change="state_change({
-                                                    active: $event.target.checked,
-                                                    id: dataRow.id,
-                                                })">
-                                            </div>
+                                            <select class="form-select" aria-label="Default select example" @change="state_change({
+                                                id: dataRow.id,
+                                                states: $event.target.value,
+                                            })">
+                                                <option 
+                                                    :value="item.value"
+                                                    v-for="(item, index) in states" :key="index"
+                                                    :selected="dataFieldExact==item.value"
+                                                >
+                                                    {{ item.text }}
+                                                </option>
+                                            </select>
                                         </div>
                                         <div v-else>
                                             {{ dataFieldExact }}
@@ -180,9 +186,8 @@ export default {
             getList()
         }
 
-        const state_change = ({id, active}) => {
-            setStateChange({id, active}).then(getList)
-            
+        const state_change = ({id, states}) => {
+            setStateChange({id, states}).then(getList)
         }
 
         const modal_create = ref(null)
@@ -209,6 +214,25 @@ export default {
             `.replace(/ /g,'').replace(/(\r\n|\n|\r)/gm,'');
         }
 
+        const states = [
+            {
+                value: 1,
+                text: 'Creado',
+            },
+            {
+                value: 2,
+                text: 'En proceso',
+            },
+            {
+                value: 3,
+                text: 'Finalizado',
+            },
+            {
+                value: 4,
+                text: 'Anulado',
+            },
+        ];
+
         return {
             listFetchingData,
             listErrors,
@@ -221,6 +245,7 @@ export default {
             state_change,
             secondsToHHMMSS,
             moment,
+            states,
         }
     },
 }

@@ -55,7 +55,7 @@ export default {
     },
     state_change ({commit}, {
         id,
-        active,
+        states,
     }) {
         commit( types.STATE_CHANGE_FETCH_REQUEST )
 
@@ -63,7 +63,7 @@ export default {
             url: `${types.route}/state_change`,
             params: {
                 id,
-                active: active ? 1 : 0,
+                states,
             },
         })
         .then(({ data }) => { 
