@@ -9,7 +9,6 @@
                         </div>
                         <div class="col">
                             <div class="d-flex justify-content-end gap-2">
-                                <router-link to="/ticket_create" class="btn btn-outline-primary d-flex align-items-center gap-2"><vue-feather type="dollar-sign"></vue-feather>Comprar boleto</router-link>
                                 <ButtonCustom
                                     :classesNames="{
                                         btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
@@ -47,8 +46,8 @@
                                         },
                                         {
                                             label: 'Tickets disponibles',
-                                            field: 'tickets_data',
-                                            type: 'text',
+                                            field: 'seats',
+                                            type: 'custom',
                                         },
                                     ]"
                                     :list="listDataJourneyDriver.list"
@@ -58,6 +57,9 @@
                                     <template v-slot:custom="{ dataRow, dataField, dataFieldExact }">
                                         <div v-if="dataField == 'journey_data'">
                                             {{ secondsToHHMMSS(dataFieldExact.duration_in_seconds*1000) }}
+                                        </div>
+                                        <div v-else-if="dataField == 'seats'">
+                                            {{ ticketsAvailable(dataFieldExact) }}
                                         </div>
                                         <div v-else-if="dataField == 'estimated_time'">
                                             {{ moment(dataRow.datetime_start+'-00:00').local().add(dataRow.journey_data.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
@@ -191,6 +193,10 @@ export default {
             `.replace(/ /g,'').replace(/(\r\n|\n|\r)/gm,'');
         }
 
+        const ticketsAvailable = (seats) => {
+            return 10 - seats.map(seat => !seat.available).reduce((a,b) => a+b, 0)
+        }
+
         return {
             listFetchingData,
             listErrors,
@@ -198,6 +204,7 @@ export default {
             listParams,
             updateList,
             state_change,
+            ticketsAvailable,
 
             listParamsJourneyDriver,
             listFetchingDataJourneyDriver,
