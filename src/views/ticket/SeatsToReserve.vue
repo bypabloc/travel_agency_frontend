@@ -5,61 +5,22 @@
             bg: {
                 'header': 'primary',
             },
-            size: '',
+            size: 'full',
         }"
         @close="close"
     >
         <template v-slot:title>
-            <h5 class="modal-title font-weight-bold">Crear viaje</h5>
+            <h5 class="modal-title font-weight-bold">Indica el asiento</h5>
         </template>
         <template v-slot:body>
             <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
 
-            <div class="mb-3">
-                <JourneySelect
-                    name="journey"
-                    v-model.trim.lazy="formValues.journey"
-                    :value="formValues.journey"
-                    :errors="formValuesErrors.journey"
-                    @change="changeJourney"
-                    @unselect="changeJourney"
-                />
-            </div>
+            Modal para reservar
 
-            <div class="mb-3">
-                <InputDate
-                    name="datetime_start"
-                    type="datetime"
-                    label="Fecha de salida"
-                    :min="new Date()"
-                    placeholder=""
-                    v-model.trim.lazy="formValues.datetime_start"
-                    :value="formValues.datetime_start"
-                    :errors="formValuesErrors.datetime_start"
-                />
-            </div>
+            {{ data }}
 
-            <div class="mb-3">
-                <label class="form-label"
-                    style="font-weight: bold;"
-                    >Tiempo estimado de llegada</label>
-                <div class="input-group mb-3" v-if="formValues.datetime_start && formValues.journey_data">
-                    {{ moment(formValues.datetime_start, 'YYYY-MM-DD HH:mm').add(formValues.journey_data.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
-                </div>
-                <div v-else>
-                    Seleccione una fecha de salida para calcular la llegada
-                </div>
-            </div>
+            <img :src="requireImage('seat.svg')" alt="" class="seat-icon">
 
-            <div class="mb-3">
-                <DriverSelect
-                    name="driver"
-                    label="Chofer"
-                    v-model.trim.lazy="formValues.driver"
-                    :value="formValues.driver"
-                    :errors="formValuesErrors.driver"
-                />
-            </div>
         </template>
         <template 
             v-slot:actions
@@ -72,7 +33,7 @@
                 text="Guardar" 
                 icon="save" 
                 :loading="createFetchingData" 
-                @click="createEvent"
+                @click="getXY(data.seats)"
             />
         </template>
         
@@ -88,14 +49,11 @@ import moment from 'moment';
 
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
-import InputDate from '@/components/InputDate.vue'
+import InputText from '@/components/InputText.vue'
 
-import DriverSelect from '@/views/driver/Select.vue'
-import JourneySelect from '@/views/journey/Select.vue'
+import useSeat from '@/composables/useSeat'
 
-import useJourneyDriver from '@/composables/useJourneyDriver'
-
-import { getErrorsFromYup } from '@/helpers'
+import { getErrorsFromYup, requireImage } from '@/helpers'
 
 export const props = {};
 
@@ -105,9 +63,7 @@ export default {
     components:{
         Modal,
         ButtonCustom,
-        InputDate,
-        DriverSelect,
-        JourneySelect,
+        InputText,
     },
     setup(props, { emit, attrs }) {
 
@@ -115,25 +71,35 @@ export default {
             createFetchingData, 
             createErrors,
             create,
-        } = useJourneyDriver()
+        } = useSeat()
+
+        // document = models.CharField(max_length=15, unique=True)
+        // names = models.CharField(max_length=50)
+        // lastname = models.CharField(max_length=50)
+        // date_of_birth = models.DateField()
 
         const schemaCreate = yup.object().shape({
-            datetime_start: yup.date().required(),
-            states: yup.number().required(),
-            journey: yup.number().required().positive('journey is a required field'),
-            driver: yup.number().required().positive('journey is a required field'),
+            seat_x: yup.string().required().min(1).max(1),
+            seat_y: yup.string().required().min(1).max(1),
+            is_active: yup.boolean(),
         });
 
         let formValues = reactive({
-            states: 1,
+            is_active: true,
         });
 
         const formValuesErrors = ref({});
+
+        const data = ref({});
 
         const modal = ref(null)
 
         const open = () => {
             modal.value.open({});
+        }
+
+        const setData = (e) => {
+            data.value = e;
         }
 
         const close = () => {
@@ -143,7 +109,7 @@ export default {
             for (const key in formValuesErrors.value) {
                 delete formValuesErrors.value[key]
             }
-            formValues['states'] = 1
+            formValues['date_of_birth'] = moment().format('YYYY-MM-DD')
         }
 
         const createEvent = async () => {
@@ -178,14 +144,13 @@ export default {
             
         }
 
-        const changeJourney = (e) => {
-            if(e){
-                console.log('changeJourney',e)
-                formValues['journey_data'] = e
-            }else{
-                delete formValues['journey_data']
-                console.log('Journey unselect')
-            }
+        const getXY = (seats) => {
+
+            console.log('getXY',seats)
+
+            const az = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+
+
         }
 
         return {
@@ -200,9 +165,17 @@ export default {
 
             createEvent,
 
-            changeJourney,
-            moment,
+            data,
+            setData,
+            requireImage,
+            getXY,
         };
     },
 }
 </script>
+
+<style scoped>
+.seat-icon{
+    height: 52px;
+}
+</style>

@@ -18,11 +18,12 @@ const routes = [
 ]
 
 if (menu_items.length > 0) {
-    menu_items.forEach(({ isActive, path, name, component }) => {
+    menu_items.forEach(({ isActive, path, name, props, component }) => {
         if(isActive) {
             routes.push({
                 path,
                 name,
+                props,
                 component: () => import(/* webpackChunkName: "[request]" */ `@/views/${component}.vue`)
             })
         }

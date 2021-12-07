@@ -26,23 +26,6 @@ export default {
             return Promise.reject(err);
         });
     },
-    getListJourneysAvailables ({state,commit}) {
-        commit( types.LIST_FETCH_REQUEST )
-
-        return endpoint.get({
-            url: `${types.route}/journeys`,
-            params: state.list.params,
-        })
-        .then(({ data }) => {
-            commit(types.LIST_FETCH_SUCCESS, data )
-            return data;
-        })
-        .catch(err => {
-            console.log('err',err)
-            commit(types.LIST_FETCH_FAILURE, { err: err.errors }) 
-            return Promise.reject(err);
-        });
-    },
     create ({commit}, {
         datetime_start,
         states,

@@ -15,6 +15,27 @@
                     </template>
                 </v-date-picker>
             </template>
+            <template v-else-if="type=='range'">
+                <v-date-picker v-model="inputValue" is-range v-show="false" />
+                <v-date-picker v-model="inputValue" is-range popover-align="center">
+                    <template v-slot="{ inputValue, inputEvents }">
+                        <div class="flex justify-center items-center">
+                            <input
+                                :value="inputValue.start"
+                                v-on="inputEvents.start"
+                                readonly
+                                class="border px-2 py-1 w-32 rounded focus:outline-none focus:border-indigo-300"
+                            />
+                            <input
+                                :value="inputValue.end"
+                                v-on="inputEvents.end"
+                                readonly
+                                class="border px-2 py-1 w-32 rounded focus:outline-none focus:border-indigo-300"
+                            />
+                        </div>
+                    </template>
+                </v-date-picker>
+            </template>
             <template v-else>
                 <v-date-picker 
                     v-model="inputValue" 
@@ -62,7 +83,7 @@ export default {
     props: {
         type: {
             type: String,
-            default: "text",
+            default: "date",
         },
         value: {
             type: String,
@@ -106,7 +127,17 @@ export default {
         watch(
             () => inputValue.value,
             (inputValue, prevInputValue) => {
-                ctx.emit("update:modelValue", moment(inputValue).startOf('minute').format('YYYY-MM-DD HH:mm'));
+                console.log('inputValue',inputValue)
+                console.log('props.type',props.type)
+                if(props.type == 'range'){
+                    ctx.emit("update:modelValue", moment(inputValue).startOf('minute').format('YYYY-MM-DD HH:mm'));
+                    ctx.emit("change", {
+                        start: moment(inputValue.start).startOf('day').format('YYYY-MM-DD HH:mm'),
+                        end: moment(inputValue.end).endOf('day').format('YYYY-MM-DD HH:mm'),
+                    });
+                }else{
+                    ctx.emit("update:modelValue", moment(inputValue).startOf('minute').format('YYYY-MM-DD HH:mm'));
+                }
             }
         )
 

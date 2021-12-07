@@ -20,7 +20,7 @@
                 }
                 "
                 >
-                <template v-if="item.isActive">
+                <template v-if="item.isActive && !item.hiddenInTheSidebar">
                     <router-link :to="item.path" class="" active-class="active">{{item.text}}</router-link>
                     <hr class="dropdown-divider" v-if="item.divider">
                 </template>

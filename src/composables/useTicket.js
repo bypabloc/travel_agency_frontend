@@ -3,7 +3,7 @@ import { useStore } from 'vuex'
 
 export default () => {
 
-    const module = 'journey_driver';
+    const module = 'ticket';
 
     const store = useStore();
 
@@ -12,7 +12,6 @@ export default () => {
         listErrors: computed(() => store.getters[`${module}/listErrors`] ),
         listData: computed(() => store.getters[`${module}/listData`] ),
         getList: () => store.dispatch(`${module}/getList`),
-        getListJourneysAvailables: () => store.dispatch(`${module}/getListJourneysAvailables`),
 
         listParams: computed(() => store.getters[`${module}/listParams`] ),
         setParams: ( e ) => store.dispatch(`${module}/setParams`, e ),

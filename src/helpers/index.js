@@ -31,3 +31,8 @@ export const getErrorsFromYup = ({arr,err}) => {
 
     return arr
 };
+
+// https://stackoverflow.com/a/66092645/7100847
+export const requireImage = link => {
+    return require(`@/assets/${link}`);
+}
