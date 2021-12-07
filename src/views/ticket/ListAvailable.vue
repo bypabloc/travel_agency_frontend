@@ -103,6 +103,7 @@
 
     <SeatsToReserve
         ref="modal_seats_to_reserve"
+        @finish_success="getListJourneysAvailables"
     />
 
 </template>
@@ -216,15 +217,14 @@ export default {
             `.replace(/ /g,'').replace(/(\r\n|\n|\r)/gm,'');
         }
 
-        const ticketsAvailable = (seats) => {
-            return 10 - seats.map(seat => !seat.available).reduce((a,b) => a+b, 0)
-        }
+        const ticketsAvailable = (seats) => (seats.length - seats.map(seat => !seat.available).reduce((old,curr) => curr ? old+1 : old, 0)) + ' / ' + seats.length
 
         const modal_seats_to_reserve = ref(null)
         const modalSeatsToReserveEvent = (e) => {
             console.log('modalSeatsToReserveEvent',e)
             modal_seats_to_reserve.value.open();
             modal_seats_to_reserve.value.setData(e)
+            modal_seats_to_reserve.value.getXY()
         }
 
         return {

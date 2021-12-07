@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <label :for="name" class="form-label">Buses</label>
+        <label :for="name" class="form-label">Pasajero</label>
         <div class="input-group mb-3">
             <v-select
                 :options="listData.list"
@@ -18,14 +18,10 @@
                 @click="onChange"
                 @change="onChange"
                 
-                @open="onOpen"
-                @close="onClose"
-                
                 @search="(search, loading) => { 
                     loading(true)
                     fetch(search).then(loading(false));
                 }"
-                v-model="inputValue"
             >
                 <template v-slot:list-footer>
                     <li v-show="hasNextPage" ref="load" class="loader">
@@ -39,48 +35,24 @@
                 </template>
 
                 <template v-slot:option="item">
-                    Placa: {{ item.plate }}
+                    Documento: {{ item.document }}
                     <br>
-                    Color: <span 
-                        :style="{
-                            height: '25px',
-                            width: '25px',
-                            'background-color': item.color,
-                            borderRadius: '50%',
-                            display: 'inline-block',
-                        }"
-                    ></span>
+                    Nombres: {{ item.names }}
                     <br>
-                    Marca: {{ item.brand }}
+                    Apellidos: {{ item.lastname }}
                     <br>
-                    Modelo: {{ item.model }}
+                    Fecha de nacimiento: {{ item.date_of_birth }}
                     <br>
-                    Serial: {{ item.serial }}
                     <br>
-                    Año: {{ item.year }}
                 </template>
 
                 <template v-slot:selected-option="item">
                     <div class="selected d-center">
-                        Placa: {{ item.plate.substring(0,20) }}
+                        Documento: {{ item.document.substring(0,10) }}
                         <br>
-                        Color: <span 
-                            :style="{
-                                height: '25px',
-                                width: '25px',
-                                'background-color': item.color,
-                                borderRadius: '50%',
-                                display: 'inline-block',
-                            }"
-                        ></span>
+                        Nombres: {{ item.names.substring(0,10) }}
                         <br>
-                        Marca: {{ item.brand.substring(0,20) }}
-                        <br>
-                        Modelo: {{ item.model.substring(0,20) }}
-                        <br>
-                        Serial: {{ item.serial.substring(0,20) }}
-                        <br>
-                        Año: {{ item.year }}
+                        Apellidos: {{ item.lastname.substring(0,10) }}
                     </div>
                 </template>
 
@@ -106,9 +78,9 @@
 <script>
 import vSelect from 'vue-select'
 
-import { ref, onMounted, nextTick, computed, onBeforeMount, watch } from 'vue'
+import { ref, onMounted, nextTick, computed, onBeforeMount } from 'vue'
 
-import useBus from '@/composables/useBus';
+import usePassenger from '@/composables/usePassenger';
 
 export default {
     name: 'SelectableInfiniteScroll',
@@ -121,7 +93,7 @@ export default {
             default: "select",
         },
         value: {
-            type: [String, Number],
+            type: String,
             default: "",
         },
         name: {
@@ -144,36 +116,21 @@ export default {
             type: Array,
             default: [],
         },
-        unique_in_drivers: {
-            type: Boolean,
-            default: false,
-        },
     },
     setup(props, ctx) {
-        
-        const { unique_in_drivers, value } = props;
 
         const {
             listErrors,
             listData,
             setParams,
             getList,
-        } = useBus()
+        } = usePassenger()
         
         const load = ref(null);
         const observer = ref(null);
         const limit = ref(10);
         const search = ref('');
-
-        const inputValue = ref(value)
-
-        watch(
-            () => inputValue.value,
-            (inputValue, prevInputValue) => {
-                console.log('inputValue',inputValue)
-            }
-        )
-
+        
         const infiniteScroll = async ([{ isIntersecting, target }]) => {
             if (isIntersecting) {
                 const ul = target.offsetParent
@@ -182,12 +139,7 @@ export default {
                 await nextTick()
                 ul.scrollTop = scrollTop
 
-                unique_in_drivers.value ? setParams({
-                    per_page: limit.value,
-                    page: 1,
-                    search,
-                    unique_in_drivers: true,
-                }) : setParams({
+                setParams({
                     per_page: limit.value,
                     page: 1,
                     search,
@@ -197,12 +149,7 @@ export default {
         }
 
         onBeforeMount(() => {
-            unique_in_drivers.value ? setParams({
-                per_page: limit.value,
-                page: 1,
-                search,
-                unique_in_drivers: true,
-            }) : setParams({
+            setParams({
                 per_page: limit.value,
                 page: 1,
                 search,
@@ -222,23 +169,14 @@ export default {
             observer.value.disconnect()
         }
 
-        const reset = () => {
-            inputValue.value = ''
-        }
-
         const hasNextPage = computed(() => {
             return listData.value.records_total > limit.value
         })
 
         const fetch = async (e) => {
             console.log('e',e)
-
-            unique_in_drivers.value ? setParams({
-                per_page: limit.value,
-                page: 1,
-                search: e,
-                unique_in_drivers: true,
-            }) : setParams({
+            
+            setParams({
                 per_page: limit.value,
                 page: 1,
                 search: e,
@@ -271,7 +209,7 @@ export default {
                 }
             }else{
                 console.log("update:modelValue")
-                ctx.emit("update:modelValue", e.id);
+                ctx.emit("update:modelValue", `${e.id}`);
                 ctx.emit("change", e);
             }
         };
@@ -279,14 +217,12 @@ export default {
         return {
             onChange,
             load,
-            reset,
             fetch,
             onOpen,
             onClose,
             hasNextPage,
             listData,
             listErrors,
-            inputValue,
         };
     },
 };

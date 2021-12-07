@@ -25,6 +25,7 @@
                     loading(true)
                     fetch(search).then(loading(false));
                 }"
+                v-model="inputValue"
             >
                 <template v-slot:list-footer>
                     <li v-show="hasNextPage" ref="load" class="loader">
@@ -96,7 +97,7 @@ export default {
             default: "select",
         },
         value: {
-            type: String,
+            type: [String, Number],
             default: "",
         },
         name: {
@@ -145,8 +146,6 @@ export default {
             }
         )
 
-        console.log('inputValue',inputValue)
-        
         const infiniteScroll = async ([{ isIntersecting, target }]) => {
             if (isIntersecting) {
                 const ul = target.offsetParent
@@ -185,13 +184,15 @@ export default {
             observer.value.disconnect()
         }
 
+        const reset = () => {
+            inputValue.value = ''
+        }
+
         const hasNextPage = computed(() => {
             return listData.value.records_total > limit.value
         })
 
         const fetch = async (e) => {
-            console.log('e',e)
-            
             setParams({
                 per_page: limit.value,
                 page: 1,
@@ -207,7 +208,6 @@ export default {
         }
 
         onMounted(() => {
-            console.log('onMounted!')
             observer.value = new IntersectionObserver(infiniteScroll)
         })
 
@@ -218,14 +218,14 @@ export default {
                 for (const el of path) {
                     if(el.tagName == 'BUTTON'){
                         if(el.classList.contains('vs__clear')){
-                            ctx.emit("update:modelValue", `${0}`);
+                            ctx.emit("update:modelValue", undefined);
                             ctx.emit("change");
                         }
                     }
                 }
             }else{
                 console.log("update:modelValue")
-                ctx.emit("update:modelValue", `${e.id}`);
+                ctx.emit("update:modelValue", e.id);
                 ctx.emit("change", e);
             }
         };
@@ -253,7 +253,9 @@ export default {
         return {
             onChange,
             load,
+            reset,
             fetch,
+            inputValue,
             onOpen,
             onClose,
             hasNextPage,

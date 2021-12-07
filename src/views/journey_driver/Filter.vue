@@ -10,14 +10,13 @@
         @close="close"
     >
         <template v-slot:title>
-            <h5 class="modal-title font-weight-bold">Crear viaje</h5>
+            <h5 class="modal-title font-weight-bold">Filtrar viajes</h5>
         </template>
         <template v-slot:body>
-            <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
-
             <div class="mb-3">
                 <JourneySelect
                     name="journey"
+                    ref="journey_select"
                     v-model="formValues.journey"
                     :value="formValues.journey"
                     :errors="formValuesErrors.journey"
@@ -27,39 +26,30 @@
             </div>
 
             <div class="mb-3">
-                <InputDate
-                    name="datetime_start"
-                    type="datetime"
-                    label="Fecha de salida"
-                    :min="new Date()"
+                <BusSelect
+                    name="bus"
+                    ref="bus_select"
+                    v-model="formValues.bus"
+                    :value="formValues.bus"
+                    :errors="formValuesErrors.bus"
+                    :unique_in_drivers="false"
+                    @change="changeBus"
+                    @unselect="changeBus"
+                />
+            </div>
+
+            <div class="mb-3">
+                <InputText
+                    name="average_capacity_sold"
+                    type="number"
+                    label="N % de su capacidad vendida"
                     placeholder=""
-                    v-model.trim.lazy="formValues.datetime_start"
-                    :value="formValues.datetime_start"
-                    :errors="formValuesErrors.datetime_start"
+                    v-model="formValues.average_capacity_sold"
+                    :value="formValues.average_capacity_sold"
+                    :errors="formValuesErrors.average_capacity_sold"
                 />
             </div>
 
-            <div class="mb-3">
-                <label class="form-label"
-                    style="font-weight: bold;"
-                    >Tiempo estimado de llegada</label>
-                <div class="input-group mb-3" v-if="formValues.datetime_start && formValues.journey_data">
-                    {{ moment(formValues.datetime_start, 'YYYY-MM-DD HH:mm').add(formValues.journey_data.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
-                </div>
-                <div v-else>
-                    Seleccione una fecha de salida para calcular la llegada
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <DriverSelect
-                    name="driver"
-                    label="Chofer"
-                    v-model.trim.lazy="formValues.driver"
-                    :value="formValues.driver"
-                    :errors="formValuesErrors.driver"
-                />
-            </div>
         </template>
         <template 
             v-slot:actions
@@ -69,10 +59,9 @@
                     btn_custom: 'btn btn-primary d-flex align-items-center gap-2',
                 }" 
                 type="button" 
-                text="Guardar" 
-                icon="save" 
-                :loading="createFetchingData" 
-                @click="createEvent"
+                text="Filtrar" 
+                icon="filter" 
+                @click="searchEvent"
             />
         </template>
         
@@ -88,9 +77,9 @@ import moment from 'moment';
 
 import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
-import InputDate from '@/components/InputDate.vue'
+import InputText from '@/components/InputText.vue'
 
-import DriverSelect from '@/views/driver/Select.vue'
+import BusSelect from '@/views/bus/Select.vue'
 import JourneySelect from '@/views/journey/Select.vue'
 
 import useJourneyDriver from '@/composables/useJourneyDriver'
@@ -105,23 +94,20 @@ export default {
     components:{
         Modal,
         ButtonCustom,
-        InputDate,
-        DriverSelect,
+        InputText,
+        BusSelect,
         JourneySelect,
     },
     setup(props, { emit, attrs }) {
 
         const {
-            createFetchingData, 
-            createErrors,
-            create,
+            setParams,
         } = useJourneyDriver()
 
         const schemaCreate = yup.object().shape({
-            datetime_start: yup.date().required(),
-            states: yup.number().required(),
-            journey: yup.number().required().positive('journey is a required field'),
-            driver: yup.number().required().positive('journey is a required field'),
+            journey: yup.number().positive('journey is a required field'),
+            bus: yup.number().positive('bus is a required field'),
+            average_capacity_sold: yup.number().positive('average capacity sold must be positive'),
         });
 
         let formValues = reactive({
@@ -131,9 +117,12 @@ export default {
         const formValuesErrors = ref({});
 
         const modal = ref(null)
-
+        const journey_select = ref(null)
+        const bus_select = ref(null)
         const open = () => {
             modal.value.open({});
+            bus_select.value.reset()
+            journey_select.value.reset()
         }
 
         const close = () => {
@@ -146,8 +135,8 @@ export default {
             formValues['states'] = 1
         }
 
-        const createEvent = async () => {
-            console.log('createEvent')
+        const searchEvent = async () => {
+            console.log('searchEvent')
 
             try {
                 await schemaCreate.validate(formValues, { abortEarly: false })
@@ -155,7 +144,12 @@ export default {
                     formValuesErrors.value[key] = []
                 }
                 try {
-                    await create(formValues)
+
+                    await setParams({
+                        journey: formValues?.journey,
+                        bus: formValues?.bus,
+                        average_capacity_sold: formValues?.average_capacity_sold,
+                    })
                     modal.value.close();
                     emit('finish_success')
                 } catch (err) {
@@ -172,7 +166,7 @@ export default {
                     }
                 }
             } catch (err) {
-                console.log('createEvent -> catch', err)
+                console.log('searchEvent -> catch', err)
                 formValuesErrors.value = getErrorsFromYup({arr:formValuesErrors.value, err})
             }
             
@@ -184,23 +178,32 @@ export default {
                 formValues['journey_data'] = e
             }else{
                 delete formValues['journey_data']
-                console.log('Journey unselect')
+                console.log('journey unselect')
+            }
+        }
+        const changeBus = (e) => {
+            if(e){
+                console.log('changeBus',e)
+                formValues['bus_data'] = e
+            }else{
+                delete formValues['bus_data']
+                console.log('bus unselect')
             }
         }
 
         return {
             modal,
+            journey_select,
+            bus_select,
             open,
             close,
             formValues,
             formValuesErrors,
 
-            createErrors,
-            createFetchingData,
-
-            createEvent,
+            searchEvent,
 
             changeJourney,
+            changeBus,
             moment,
         };
     },

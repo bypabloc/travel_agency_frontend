@@ -14,6 +14,15 @@
                                         btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
                                     }" 
                                     type="button" 
+                                    text="Filtrar" 
+                                    icon="filter" 
+                                    @click="modalFilterEvent"
+                                />
+                                <ButtonCustom
+                                    :classesNames="{
+                                        btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
+                                    }" 
+                                    type="button" 
                                     text="Nuevo" 
                                     icon="plus" 
                                     @click="modalEvent"
@@ -44,7 +53,7 @@
                                         },
                                         {
                                             label: 'Trayecto',
-                                            field: 'journey',
+                                            field: 'journey_data',
                                             type: 'custom',
                                         },
                                         {
@@ -60,8 +69,13 @@
                                         },
                                         {
                                             label: 'Chofer',
-                                            field: 'driver',
+                                            field: 'driver_data',
                                             type: 'custom',
+                                        },
+                                        {
+                                            label: '% de capacidad vendida',
+                                            field: 'average_capacity_sold',
+                                            type: 'text',
                                         },
                                         {
                                             label: 'states',
@@ -84,7 +98,7 @@
                                     @update="updateList"
                                 >
                                     <template v-slot:custom="{ dataRow, dataField, dataFieldExact }">
-                                        <div v-if="dataField == 'journey'">
+                                        <div v-if="dataField == 'journey_data'">
                                             {{ dataFieldExact.location_origin.name }} -
                                             {{ dataFieldExact.location_destination.name }}
                                             <br>
@@ -92,9 +106,9 @@
                                             {{ secondsToHHMMSS(dataFieldExact.duration_in_seconds*1000) }}
                                         </div>
                                         <div v-else-if="dataField == 'estimated_time'">
-                                            {{ moment(dataRow.datetime_start+'-00:00').local().add(dataRow.journey.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
+                                            {{ moment(dataRow.datetime_start+'-00:00').local().add(dataRow.journey_data.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
                                         </div>
-                                        <div v-else-if="dataField == 'driver'">
+                                        <div v-else-if="dataField == 'driver_data'">
                                             Documento: {{ dataFieldExact.document.substring(0,10) }}
                                             <br>
                                             Nombres: {{ dataFieldExact.names.substring(0,10) }}
@@ -117,7 +131,7 @@
                                         </div>
                                         <div v-else>
                                             {{ dataFieldExact }}
-                                        </div>
+                                        </div> 
                                     </template>
                                 </TableCustom>
                                 <PaginationCustom
@@ -140,6 +154,10 @@
         ref="modal_create"
         @finish_success="getList"
     />
+    <Filter
+        ref="modal_filter"
+        @finish_success="getList"
+    />
 </template>
 
 <script>
@@ -150,7 +168,9 @@ import moment from 'moment';
 import TableCustom from '@/components/Table.vue'
 import ButtonCustom from '@/components/Button.vue'
 import PaginationCustom from '@/components/Pagination.vue'
+
 import Create from './Create.vue'
+import Filter from './Filter.vue'
 
 import useJourneyDriver from '@/composables/useJourneyDriver';
 
@@ -161,6 +181,7 @@ export default {
         ButtonCustom,
         PaginationCustom,
         Create,
+        Filter,
     },
     setup() {
 
@@ -189,10 +210,16 @@ export default {
         const state_change = ({id, states}) => {
             setStateChange({id, states}).then(getList)
         }
-
+        
         const modal_create = ref(null)
         const modalEvent = () => {
             modal_create.value.open();
+        }
+
+        const modal_filter = ref(null)
+        const modalFilterEvent = () => {
+            console.log('modalFilterEvent',modal_filter.value)
+            modal_filter.value.open();
         }
 
         const secondsToHHMMSS = (count) => {
@@ -246,6 +273,8 @@ export default {
             secondsToHHMMSS,
             moment,
             states,
+            modalFilterEvent,
+            modal_filter,
         }
     },
 }
