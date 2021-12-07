@@ -62,6 +62,21 @@
                                             type: 'seconds-to-time',
                                         },
                                         {
+                                            field: 'quantity_journey_driver',
+                                            label: 'Cantidad de viajes',
+                                            type: 'text',
+                                        },
+                                        {
+                                            field: 'quantity_ticket_sold',
+                                            label: 'Cantidad de tickets vendidos',
+                                            type: 'text',
+                                        },
+                                        {
+                                            field: 'average_passengers',
+                                            label: 'Promedio de pasajeros',
+                                            type: 'text',
+                                        },
+                                        {
                                             label: 'Activo',
                                             field: 'is_active',
                                             type: 'custom',
@@ -81,12 +96,17 @@
                                     :per_page="listParams.per_page"
                                     @update="updateList"
                                 >
-                                    <template v-slot:custom="{ dataRow }">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" :checked="dataRow.is_active" @change="state_change({
-                                                active: $event.target.checked,
-                                                id: dataRow.id,
-                                            })">
+                                    <template v-slot:custom="{ dataRow, dataField, dataFieldExact }">
+                                        <div v-if="dataField == 'is_active'">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" :checked="dataRow.is_active" @change="state_change({
+                                                    active: $event.target.checked,
+                                                    id: dataRow.id,
+                                                })">
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            {{ dataFieldExact }}
                                         </div>
                                     </template>
                                 </TableCustom>
