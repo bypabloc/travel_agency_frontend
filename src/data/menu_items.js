@@ -72,10 +72,6 @@ export default [
         text: 'Viajes disponibles',
         component: 'ticket/ListAvailable',
         isActive: true,
-        props: {
-            prueba: 123,
-            prueba2: 456,
-        },
         hiddenInTheSidebar: true,
     },
 ]

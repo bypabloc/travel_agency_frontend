@@ -25,7 +25,10 @@
             `z-index:${zIndex+2};`,
         ]"
     >
-        <div class="modal-dialog">
+        <div class="modal-dialog"
+            :class="[
+                ( size[custom?.size] || '' ),
+            ]">
             <div class="modal-content">
                 <div
                     class="modal-header"
@@ -80,7 +83,7 @@ export const props = {
                 body: '',
                 footer: '',
             },
-            size: '',
+            size: 'default',
         },
     },
 };
@@ -103,6 +106,7 @@ export default {
                 'bg-white': 'text-dark',
             },
             size: {
+                default: '',
                 full: 'modal-dialog-full',
             },
             zIndex: 'auto',
@@ -184,3 +188,9 @@ export default {
     
 }
 </script>
+
+<style scoped>
+.modal-dialog-full{
+    max-width: 98%;
+}
+</style>

@@ -5,7 +5,7 @@
             bg: {
                 'header': 'primary',
             },
-            size: 'full',
+            size: '',
         }"
         @close="close"
     >

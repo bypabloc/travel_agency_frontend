@@ -49,6 +49,11 @@
                                             field: 'seats',
                                             type: 'custom',
                                         },
+                                        {
+                                            label: 'Acciones',
+                                            field: 'actions',
+                                            type: 'custom',
+                                        },
                                     ]"
                                     :list="listDataJourneyDriver.list"
                                     :per_page="listParamsJourneyDriver.per_page"
@@ -60,6 +65,17 @@
                                         </div>
                                         <div v-else-if="dataField == 'seats'">
                                             {{ ticketsAvailable(dataFieldExact) }}
+                                        </div>
+                                        <div v-else-if="dataField == 'actions'">
+                                            <ButtonCustom
+                                                :classesNames="{
+                                                    btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
+                                                }" 
+                                                type="button" 
+                                                text="Ver asientos" 
+                                                icon="eye" 
+                                                @click="modalSeatsToReserveEvent(dataRow)"
+                                            />
                                         </div>
                                         <div v-else-if="dataField == 'estimated_time'">
                                             {{ moment(dataRow.datetime_start+'-00:00').local().add(dataRow.journey_data.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
@@ -85,6 +101,10 @@
         </div>
     </div>
 
+    <SeatsToReserve
+        ref="modal_seats_to_reserve"
+    />
+
 </template>
 
 <script>
@@ -97,6 +117,8 @@ import TableCustom from '@/components/Table.vue'
 import ButtonCustom from '@/components/Button.vue'
 import PaginationCustom from '@/components/Pagination.vue'
 
+import SeatsToReserve from '@/views/ticket/SeatsToReserve.vue'
+
 import useTicket from '@/composables/useTicket';
 import useJourneyDriver from '@/composables/useJourneyDriver';
 
@@ -106,6 +128,7 @@ export default {
         TableCustom,
         ButtonCustom,
         PaginationCustom,
+        SeatsToReserve,
     },
     setup(props) {
 
@@ -197,6 +220,13 @@ export default {
             return 10 - seats.map(seat => !seat.available).reduce((a,b) => a+b, 0)
         }
 
+        const modal_seats_to_reserve = ref(null)
+        const modalSeatsToReserveEvent = (e) => {
+            console.log('modalSeatsToReserveEvent',e)
+            modal_seats_to_reserve.value.open();
+            modal_seats_to_reserve.value.setData(e)
+        }
+
         return {
             listFetchingData,
             listErrors,
@@ -213,6 +243,9 @@ export default {
 
             moment,
             secondsToHHMMSS,
+
+            modalSeatsToReserveEvent,
+            modal_seats_to_reserve,
         }
     },
 }
