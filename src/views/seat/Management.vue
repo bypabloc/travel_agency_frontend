@@ -148,7 +148,10 @@ export default {
         }
 
         const state_change = ({id, active}) => {
-            setStateChange({id, active}).then(getList)
+            setStateChange({id, active}).then(getList).catch(err => {
+                console.log('error',err)
+                // setStateChange({id, active: !active})
+            })
             
         }
 

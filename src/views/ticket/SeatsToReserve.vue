@@ -5,22 +5,113 @@
             bg: {
                 'header': 'primary',
             },
-            size: 'full',
         }"
         @close="close"
     >
         <template v-slot:title>
-            <h5 class="modal-title font-weight-bold">Indica el asiento</h5>
+            <h5 class="modal-title font-weight-bold">Indica la información del boleto</h5>
         </template>
         <template v-slot:body>
             <div class="alert alert-danger" role="alert" v-if="createErrors" v-html="createErrors"></div>
 
-            Modal para reservar
+            <div class="mb-3">
+                <InputText
+                    name="journey_driver"
+                    type="number"
+                    placeholder=""
+                    label="Conductor"
+                    :labelShow="false"
+                    :inputShow="false"
+                    v-model="formValues.journey_driver"
+                    :value="formValues.journey_driver"
+                    :errors="formValuesErrors.journey_driver"
+                />
+            </div>
 
-            {{ data }}
+            <div class="mb-3">
+                <PassengerSelect
+                    name="passenger"
+                    v-model="formValues.passenger"
+                    :value="formValues.passenger"
+                    :errors="formValuesErrors.passenger"
+                />
+            </div>
 
-            <img :src="requireImage('seat.svg')" alt="" class="seat-icon">
-
+            <div class="mb-3">
+                <div>
+                    <label for="boleto" class="form-label"
+                        style="font-weight: bold;"
+                    >
+                        Asientos
+                    </label>
+                    <div class="mb-3">
+                        <label for="boleto" class="form-label"
+                            style="font-weight: bold;"
+                        >
+                            <img :src="requireImage('seat.svg')" alt="" class="seat-icon "> = Disponible
+                        </label>
+                        <label for="boleto" class="form-label"
+                            style="font-weight: bold;"
+                        >
+                            <img :src="requireImage('seat.svg')" alt="" class="seat-icon theme-color-green-500"> = Seleccionado
+                        </label>
+                        <label for="boleto" class="form-label"
+                            style="font-weight: bold;"
+                        >
+                            <img :src="requireImage('seat.svg')" alt="" class="seat-icon theme-color-red-500"> = Ocupado
+                        </label>
+                    </div>
+                    <div class="input-group mb-3">
+                        <table 
+                            class="table table-borderless"
+                            style="width: auto;"
+                            >
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th scope="row" v-for="x in seatX" :key="x" class="">
+                                        <div class="d-flex justify-content-center">{{ x }}</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(y, yIndex) in seats" :key="yIndex">
+                                    <th>{{ az[yIndex] }}</th>
+                                    <th v-for="(x, xIndex) in y" :key="xIndex">
+                                        <div v-show="x.available" >
+                                            <div class="d-flex justify-content-center">
+                                                <img 
+                                                    :src="requireImage('seat.svg')" alt=""
+                                                    class="seat-icon"
+                                                    :class="[
+                                                        (x.available == 1 ? 'theme-color-red-500' : ''),
+                                                        (x.available == 3 ? 'theme-color-green-500' : ''),
+                                                    ]"
+                                                    @click="x.available != 1 ? setSelect(x) : ''"
+                                                >
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div 
+                        :class="[
+                            (
+                            formValuesErrors?.seat?.length ? 'invalid-feedback-custom-label ' : ''
+                            ),
+                        ]"
+                        v-if="formValuesErrors?.seat?.length"
+                        >
+                        <ul>
+                            <li v-for="(item, index) in formValuesErrors.seat" :key="index" :value="item">
+                                {{ item }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </template>
         <template 
             v-slot:actions
@@ -33,7 +124,7 @@
                 text="Guardar" 
                 icon="save" 
                 :loading="createFetchingData" 
-                @click="getXY(data.seats)"
+                @click="createEvent"
             />
         </template>
         
@@ -51,7 +142,10 @@ import Modal from '@/components/Modal.vue'
 import ButtonCustom from '@/components/Button.vue'
 import InputText from '@/components/InputText.vue'
 
+import PassengerSelect from '@/views/passenger/Select.vue'
+
 import useSeat from '@/composables/useSeat'
+import useTicket from '@/composables/useTicket'
 
 import { getErrorsFromYup, requireImage } from '@/helpers'
 
@@ -64,6 +158,7 @@ export default {
         Modal,
         ButtonCustom,
         InputText,
+        PassengerSelect,
     },
     setup(props, { emit, attrs }) {
 
@@ -71,7 +166,7 @@ export default {
             createFetchingData, 
             createErrors,
             create,
-        } = useSeat()
+        } = useTicket()
 
         // document = models.CharField(max_length=15, unique=True)
         // names = models.CharField(max_length=50)
@@ -79,9 +174,9 @@ export default {
         // date_of_birth = models.DateField()
 
         const schemaCreate = yup.object().shape({
-            seat_x: yup.string().required().min(1).max(1),
-            seat_y: yup.string().required().min(1).max(1),
-            is_active: yup.boolean(),
+            journey_driver: yup.number().required(),
+            passenger: yup.number().required(),
+            seat: yup.number().required(),
         });
 
         let formValues = reactive({
@@ -90,16 +185,19 @@ export default {
 
         const formValuesErrors = ref({});
 
-        const data = ref({});
-
         const modal = ref(null)
-
         const open = () => {
             modal.value.open({});
         }
 
+        const data = ref(null);
+        const seats = ref([]);
+        const seatSelected = ref(null);
         const setData = (e) => {
             data.value = e;
+            seats.value = [];
+            formValues.journey_driver = e.id;
+            formValues?.seat ?? delete formValues.seat;
         }
 
         const close = () => {
@@ -109,7 +207,6 @@ export default {
             for (const key in formValuesErrors.value) {
                 delete formValuesErrors.value[key]
             }
-            formValues['date_of_birth'] = moment().format('YYYY-MM-DD')
         }
 
         const createEvent = async () => {
@@ -140,17 +237,84 @@ export default {
             } catch (err) {
                 console.log('createEvent -> catch', err)
                 formValuesErrors.value = getErrorsFromYup({arr:formValuesErrors.value, err})
+                console.log('createEvent -> formValuesErrors.value', formValuesErrors.value)
             }
             
         }
 
-        const getXY = (seats) => {
+        const seatX = ref(0);
+        const seatY = ref(0);
 
-            console.log('getXY',seats)
+        const az = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
-            const az = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+        const getXY = () => {
+            console.clear()
+            const azMax = data.value.seats.reduce((p, c) => p.y > c.y ? p : c);
 
+            const yMax = az.findIndex((e) => azMax.y == e) + 1
 
+            const xMax = data.value.seats.reduce((p, c) => p.x > c.x ? p : c).x;
+
+            seatY.value = yMax
+            seatX.value = xMax
+
+            console.log('yMax',yMax)
+            for (let y = 1; y < yMax+1; y++) {
+                console.log('y',y)
+                const yRow = []
+
+                for (let x = 1; x < xMax+1; x++) {
+                    console.log('x',x)
+                    const data = getSeat({x,y})
+                    console.log('data',data)
+                    yRow.push(data)
+                }
+                console.log('yRow',yRow)
+                seats.value.push(yRow)
+            }
+
+        }
+
+        const getSeat = ({x,y}) => {
+            
+            const yLetter = az[y-1]
+
+            let seat = data.value.seats.find( (e) => (e.y==yLetter) && (e.x==x) )
+
+            let available = 0
+            if(seat){
+                available = seat.available ? 2 : 1
+            }else{
+                seat = {
+                    x,
+                    y: yLetter,
+                    available,
+                }
+            }
+
+            return {
+                available,
+                seat,
+            }
+        }
+        
+        const setSelect = (e) => {
+            const available = e.available
+            seats.value.forEach( (row, y) => {
+                row.forEach( (seat, x) => {
+                    if(seat.available == 3){
+                        seat.available = 2
+                    }
+                })
+            })
+            console.log('seat',e)
+            if (available == 2) {
+                e.available = 3
+                formValues['seat'] = e.seat.id
+            }else if (available == 3) {
+                e.available = 2
+                delete formValues['seat']
+            }
         }
 
         return {
@@ -169,6 +333,13 @@ export default {
             setData,
             requireImage,
             getXY,
+            seatY,
+            seatX,
+            seats,
+            getSeat,
+            setSelect,
+            seatSelected,
+            az,
         };
     },
 }
@@ -177,5 +348,22 @@ export default {
 <style scoped>
 .seat-icon{
     height: 52px;
+}
+.invalid-feedback-custom-label {
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
+
+.invalid-feedback-custom {
+    width: 100%;
+    margin-top: .25rem;
+    /* font-size: 80%; */
+    color: #dc3545;
+}
+
+label {
+    font-weight: bold;
 }
 </style>

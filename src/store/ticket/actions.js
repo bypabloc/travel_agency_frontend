@@ -27,20 +27,18 @@ export default {
         });
     },
     create ({commit}, {
-        datetime_start,
-        states,
-        journey,
-        driver,
+        journey_driver,
+        passenger,
+        seat,
     }) {
         commit( types.CREATE_FETCH_REQUEST )
 
         return endpoint.post({
             url: `${types.route}/create`,
             params: {
-                datetime_start,
-                states,
-                journey,
-                driver,
+                journey_driver,
+                passenger,
+                seat,
             },
         })
         .then(({ data }) => { 

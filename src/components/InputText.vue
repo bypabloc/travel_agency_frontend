@@ -1,6 +1,14 @@
 <template>
-    <div class="">
-        <label :for="name" class="form-label">{{ label }}</label>
+    <div>
+        <label 
+            :for="name" 
+            class="form-label"
+            :class="{
+                'd-none': !inputShow,
+            }"
+        >
+            {{ label }}
+        </label>
         <div class="input-group mb-3">
             <input
                 :name="name"
@@ -10,6 +18,9 @@
                 @change="onChange"
                 @keyup="onChange"
                 class="form-control"
+                :class="{
+                    'd-none': !inputShow,
+                }"
                 >
                 <slot name="buttons"></slot>
             <div 
@@ -41,8 +52,16 @@ export default {
             default: "text",
         },
         value: {
-            type: String,
+            type: [ String, Number ],
             default: "",
+        },
+        labelShow: {
+            type: Boolean,
+            default: true,
+        },
+        inputShow: {
+            type: Boolean,
+            default: true,
         },
         name: {
             type: String,
