@@ -73,6 +73,11 @@
                                             type: 'custom',
                                         },
                                         {
+                                            label: '% de capacidad vendida',
+                                            field: 'average_capacity_sold',
+                                            type: 'text',
+                                        },
+                                        {
                                             label: 'states',
                                             field: 'states',
                                             type: 'custom',
