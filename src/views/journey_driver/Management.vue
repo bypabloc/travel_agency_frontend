@@ -14,6 +14,15 @@
                                         btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
                                     }" 
                                     type="button" 
+                                    text="Filter" 
+                                    icon="filter" 
+                                    @click="modalFilterEvent"
+                                />
+                                <ButtonCustom
+                                    :classesNames="{
+                                        btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
+                                    }" 
+                                    type="button" 
                                     text="Nuevo" 
                                     icon="plus" 
                                     @click="modalEvent"
@@ -140,6 +149,10 @@
         ref="modal_create"
         @finish_success="getList"
     />
+    <Filter
+        ref="modal_filter"
+        @finish_success="getList"
+    />
 </template>
 
 <script>
@@ -150,7 +163,9 @@ import moment from 'moment';
 import TableCustom from '@/components/Table.vue'
 import ButtonCustom from '@/components/Button.vue'
 import PaginationCustom from '@/components/Pagination.vue'
+
 import Create from './Create.vue'
+import Filter from './Filter.vue'
 
 import useJourneyDriver from '@/composables/useJourneyDriver';
 
@@ -161,6 +176,7 @@ export default {
         ButtonCustom,
         PaginationCustom,
         Create,
+        Filter,
     },
     setup() {
 
@@ -189,10 +205,16 @@ export default {
         const state_change = ({id, states}) => {
             setStateChange({id, states}).then(getList)
         }
-
+        
         const modal_create = ref(null)
         const modalEvent = () => {
             modal_create.value.open();
+        }
+
+        const modal_filter = ref(null)
+        const modalFilterEvent = () => {
+            console.log('modalFilterEvent',modal_filter.value)
+            modal_filter.value.open();
         }
 
         const secondsToHHMMSS = (count) => {
@@ -246,6 +268,8 @@ export default {
             secondsToHHMMSS,
             moment,
             states,
+            modalFilterEvent,
+            modal_filter,
         }
     },
 }

@@ -218,14 +218,14 @@ export default {
                 for (const el of path) {
                     if(el.tagName == 'BUTTON'){
                         if(el.classList.contains('vs__clear')){
-                            ctx.emit("update:modelValue", `${0}`);
+                            ctx.emit("update:modelValue", undefined);
                             ctx.emit("change");
                         }
                     }
                 }
             }else{
                 console.log("update:modelValue")
-                ctx.emit("update:modelValue", `${e.id}`);
+                ctx.emit("update:modelValue", e.id);
                 ctx.emit("change", e);
             }
         };

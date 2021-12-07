@@ -54,7 +54,7 @@
 
                 <template v-slot:selected-option="item">
                     <div class="selected d-center">
-                        Placa: {{ item.plate }}
+                        Placa: {{ item.plate.substring(0,20) }}
                         <br>
                         Color: <span 
                             :style="{
@@ -66,11 +66,11 @@
                             }"
                         ></span>
                         <br>
-                        Marca: {{ item.brand }}
+                        Marca: {{ item.brand.substring(0,20) }}
                         <br>
-                        Modelo: {{ item.model }}
+                        Modelo: {{ item.model.substring(0,20) }}
                         <br>
-                        Serial: {{ item.serial }}
+                        Serial: {{ item.serial.substring(0,20) }}
                         <br>
                         Año: {{ item.year }}
                     </div>
@@ -136,8 +136,14 @@ export default {
             type: Array,
             default: [],
         },
+        unique_in_drivers: {
+            type: Boolean,
+            default: false,
+        },
     },
     setup(props, ctx) {
+        
+        const { unique_in_drivers } = props;
 
         const {
             listErrors,
@@ -159,7 +165,12 @@ export default {
                 await nextTick()
                 ul.scrollTop = scrollTop
 
-                setParams({
+                unique_in_drivers.value ? setParams({
+                    per_page: limit.value,
+                    page: 1,
+                    search,
+                    unique_in_drivers: true,
+                }) : setParams({
                     per_page: limit.value,
                     page: 1,
                     search,
@@ -169,7 +180,12 @@ export default {
         }
 
         onBeforeMount(() => {
-            setParams({
+            unique_in_drivers.value ? setParams({
+                per_page: limit.value,
+                page: 1,
+                search,
+                unique_in_drivers: true,
+            }) : setParams({
                 per_page: limit.value,
                 page: 1,
                 search,
@@ -195,8 +211,13 @@ export default {
 
         const fetch = async (e) => {
             console.log('e',e)
-            
-            setParams({
+
+            unique_in_drivers.value ? setParams({
+                per_page: limit.value,
+                page: 1,
+                search: e,
+                unique_in_drivers: true,
+            }) : setParams({
                 per_page: limit.value,
                 page: 1,
                 search: e,
