@@ -15,7 +15,7 @@
                     </template>
                 </v-date-picker>
             </template>
-            <template v-if="type=='range'">
+            <template v-else-if="type=='range'">
                 <v-date-picker v-model="inputValue" is-range v-show="false" />
                 <v-date-picker v-model="inputValue" is-range popover-align="center">
                     <template v-slot="{ inputValue, inputEvents }">

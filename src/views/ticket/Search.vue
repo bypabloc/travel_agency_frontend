@@ -178,7 +178,6 @@ export default {
                     query: {
                         sort: 'desc',
                         sort_by: 'created_at',
-                        tz_in_minutes: new Date().getTimezoneOffset(),
                         location_origin: formValues.location_origin,
                         location_destination: formValues.location_destination,
                         date_start: moment(formValues['date_start']).format('YYYY-MM-DD'),
