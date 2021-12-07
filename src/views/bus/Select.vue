@@ -11,6 +11,13 @@
                 }"
                 
                 @option:selected="onChange"
+                @option:deselecting="onChange"
+                @option:deselected="onChange"
+                @onChange="onChange"
+                @input="onChange"
+                @click="onChange"
+                @change="onChange"
+                
                 @open="onOpen"
                 @close="onClose"
                 
@@ -18,6 +25,7 @@
                     loading(true)
                     fetch(search).then(loading(false));
                 }"
+                v-model="inputValue"
             >
                 <template v-slot:list-footer>
                     <li v-show="hasNextPage" ref="load" class="loader">
@@ -98,7 +106,7 @@
 <script>
 import vSelect from 'vue-select'
 
-import { ref, onMounted, nextTick, computed, onBeforeMount } from 'vue'
+import { ref, onMounted, nextTick, computed, onBeforeMount, watch } from 'vue'
 
 import useBus from '@/composables/useBus';
 
@@ -113,7 +121,7 @@ export default {
             default: "select",
         },
         value: {
-            type: String,
+            type: [String, Number],
             default: "",
         },
         name: {
@@ -143,7 +151,7 @@ export default {
     },
     setup(props, ctx) {
         
-        const { unique_in_drivers } = props;
+        const { unique_in_drivers, value } = props;
 
         const {
             listErrors,
@@ -156,7 +164,16 @@ export default {
         const observer = ref(null);
         const limit = ref(10);
         const search = ref('');
-        
+
+        const inputValue = ref(value)
+
+        watch(
+            () => inputValue.value,
+            (inputValue, prevInputValue) => {
+                console.log('inputValue',inputValue)
+            }
+        )
+
         const infiniteScroll = async ([{ isIntersecting, target }]) => {
             if (isIntersecting) {
                 const ul = target.offsetParent
@@ -205,6 +222,10 @@ export default {
             observer.value.disconnect()
         }
 
+        const reset = () => {
+            inputValue.value = ''
+        }
+
         const hasNextPage = computed(() => {
             return listData.value.records_total > limit.value
         })
@@ -236,19 +257,36 @@ export default {
             observer.value = new IntersectionObserver(infiniteScroll)
         })
 
-        const onChange = ({ id }) => {
-            ctx.emit("update:modelValue", `${id}`);
+        const onChange = (e) => {
+            if(!e?.id){
+                console.log('onChange',e)
+                const path = e.path
+                for (const el of path) {
+                    if(el.tagName == 'BUTTON'){
+                        if(el.classList.contains('vs__clear')){
+                            ctx.emit("update:modelValue", undefined);
+                            ctx.emit("change");
+                        }
+                    }
+                }
+            }else{
+                console.log("update:modelValue")
+                ctx.emit("update:modelValue", e.id);
+                ctx.emit("change", e);
+            }
         };
 
         return {
             onChange,
             load,
+            reset,
             fetch,
             onOpen,
             onClose,
             hasNextPage,
             listData,
             listErrors,
+            inputValue,
         };
     },
 };

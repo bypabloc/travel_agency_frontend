@@ -14,7 +14,7 @@
                                         btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
                                     }" 
                                     type="button" 
-                                    text="Filter" 
+                                    text="Filtrar" 
                                     icon="filter" 
                                     @click="modalFilterEvent"
                                 />

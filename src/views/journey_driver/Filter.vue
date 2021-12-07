@@ -16,6 +16,7 @@
             <div class="mb-3">
                 <JourneySelect
                     name="journey"
+                    ref="journey_select"
                     v-model="formValues.journey"
                     :value="formValues.journey"
                     :errors="formValuesErrors.journey"
@@ -27,6 +28,7 @@
             <div class="mb-3">
                 <BusSelect
                     name="bus"
+                    ref="bus_select"
                     v-model="formValues.bus"
                     :value="formValues.bus"
                     :errors="formValuesErrors.bus"
@@ -42,7 +44,7 @@
                     type="number"
                     label="N % de su capacidad vendida"
                     placeholder=""
-                    v-model.trim.lazy="formValues.average_capacity_sold"
+                    v-model="formValues.average_capacity_sold"
                     :value="formValues.average_capacity_sold"
                     :errors="formValuesErrors.average_capacity_sold"
                 />
@@ -57,8 +59,8 @@
                     btn_custom: 'btn btn-primary d-flex align-items-center gap-2',
                 }" 
                 type="button" 
-                text="Guardar" 
-                icon="save" 
+                text="Filtrar" 
+                icon="filter" 
                 @click="searchEvent"
             />
         </template>
@@ -115,9 +117,12 @@ export default {
         const formValuesErrors = ref({});
 
         const modal = ref(null)
-
+        const journey_select = ref(null)
+        const bus_select = ref(null)
         const open = () => {
             modal.value.open({});
+            bus_select.value.reset()
+            journey_select.value.reset()
         }
 
         const close = () => {
@@ -188,6 +193,8 @@ export default {
 
         return {
             modal,
+            journey_select,
+            bus_select,
             open,
             close,
             formValues,
