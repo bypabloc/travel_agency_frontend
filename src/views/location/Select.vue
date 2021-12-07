@@ -1,5 +1,7 @@
 <template>
-    <div class="">
+    <div class="" :style="{
+            width: '100%',
+        }">
         <label :for="name" class="form-label">{{ label || 'Ubicaciones'  }}</label>
         <div class="input-group mb-3">
             <v-select
@@ -11,8 +13,12 @@
                 }"
                 
                 @option:selected="onChange"
-                @open="onOpen"
-                @close="onClose"
+                @option:deselecting="onChange"
+                @option:deselected="onChange"
+                @onChange="onChange"
+                @input="onChange"
+                @click="onChange"
+                @change="onChange"
                 
                 @search="(search, loading) => { 
                     loading(true)
@@ -80,6 +86,10 @@ export default {
             type: String,
             default: "",
         },
+        params: {
+            type: Object,
+            default: {},
+        },
         name: {
             type: String,
             required: true,
@@ -127,6 +137,7 @@ export default {
                     per_page: limit.value,
                     page: 1,
                     search,
+                    ...props.params,
                 })
                 getList()
             }
@@ -137,6 +148,7 @@ export default {
                 per_page: limit.value,
                 page: 1,
                 search,
+                ...props.params,
             })
             getList()
         })
@@ -164,6 +176,7 @@ export default {
                 per_page: limit.value,
                 page: 1,
                 search: e,
+                ...props.params,
             })
 
             try {
@@ -179,8 +192,23 @@ export default {
             observer.value = new IntersectionObserver(infiniteScroll)
         })
 
-        const onChange = ({ id }) => {
-            ctx.emit("update:modelValue", `${id}`);
+        const onChange = (e) => {
+            if(!e?.id){
+                console.log('onChange',e)
+                const path = e.path
+                for (const el of path) {
+                    if(el.tagName == 'BUTTON'){
+                        if(el.classList.contains('vs__clear')){
+                            ctx.emit("update:modelValue", undefined);
+                            ctx.emit("change");
+                        }
+                    }
+                }
+            }else{
+                console.log("update:modelValue")
+                ctx.emit("update:modelValue", `${e.id}`);
+                ctx.emit("change", e);
+            }
         };
 
         return {
