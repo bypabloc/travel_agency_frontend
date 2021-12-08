@@ -160,7 +160,6 @@ export default {
                 })
                 getList()
             })
-            
         }
 
         const modal_create = ref(null)

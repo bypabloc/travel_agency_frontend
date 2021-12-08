@@ -78,7 +78,7 @@
                                             type: 'text',
                                         },
                                         {
-                                            label: 'states',
+                                            label: 'Estado',
                                             field: 'states',
                                             type: 'custom',
                                         },
@@ -116,7 +116,7 @@
                                             Apellidos: {{ dataFieldExact.lastname.substring(0,10) }}
                                         </div>
                                         <div v-else-if="dataField == 'states'">
-                                            <select class="form-select" aria-label="Default select example" @change="state_change({
+                                            <select class="form-select" @change="state_change({
                                                 id: dataRow.id,
                                                 states: $event.target.value,
                                             })">
