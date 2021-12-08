@@ -18,10 +18,14 @@
                 @click="onChange"
                 @change="onChange"
                 
+                @open="onOpen"
+                @close="onClose"
+                
                 @search="(search, loading) => { 
                     loading(true)
                     fetch(search).then(loading(false));
                 }"
+                v-model="inputValue"
             >
                 <template v-slot:list-footer>
                     <li v-show="hasNextPage" ref="load" class="loader">
@@ -78,7 +82,7 @@
 <script>
 import vSelect from 'vue-select'
 
-import { ref, onMounted, nextTick, computed, onBeforeMount } from 'vue'
+import { ref, onMounted, nextTick, computed, onBeforeMount, watch } from 'vue'
 
 import usePassenger from '@/composables/usePassenger';
 
@@ -93,7 +97,7 @@ export default {
             default: "select",
         },
         value: {
-            type: String,
+            type: [String, Number],
             default: "",
         },
         name: {
@@ -119,6 +123,8 @@ export default {
     },
     setup(props, ctx) {
 
+        const { value } = props;
+
         const {
             listErrors,
             listData,
@@ -130,6 +136,15 @@ export default {
         const observer = ref(null);
         const limit = ref(10);
         const search = ref('');
+
+        const inputValue = ref(value)
+
+        watch(
+            () => inputValue.value,
+            (inputValue, prevInputValue) => {
+                console.log('inputValue',inputValue)
+            }
+        )
         
         const infiniteScroll = async ([{ isIntersecting, target }]) => {
             if (isIntersecting) {
@@ -167,6 +182,10 @@ export default {
 
         const onClose = async () => {
             observer.value.disconnect()
+        }
+
+        const reset = () => {
+            inputValue.value = ''
         }
 
         const hasNextPage = computed(() => {
@@ -209,7 +228,7 @@ export default {
                 }
             }else{
                 console.log("update:modelValue")
-                ctx.emit("update:modelValue", `${e.id}`);
+                ctx.emit("update:modelValue", e.id);
                 ctx.emit("change", e);
             }
         };
@@ -217,12 +236,14 @@ export default {
         return {
             onChange,
             load,
+            reset,
             fetch,
             onOpen,
             onClose,
             hasNextPage,
             listData,
             listErrors,
+            inputValue,
         };
     },
 };

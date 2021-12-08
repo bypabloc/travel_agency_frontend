@@ -31,6 +31,7 @@
             <div class="mb-3">
                 <PassengerSelect
                     name="passenger"
+                    ref="passenger_select"
                     v-model="formValues.passenger"
                     :value="formValues.passenger"
                     :errors="formValuesErrors.passenger"
@@ -185,9 +186,12 @@ export default {
 
         const formValuesErrors = ref({});
 
+        const passenger_select = ref(null)
+
         const modal = ref(null)
         const open = () => {
             modal.value.open({});
+            passenger_select.value.reset()
         }
 
         const data = ref(null);
@@ -319,6 +323,7 @@ export default {
 
         return {
             modal,
+            passenger_select,
             open,
             close,
             formValues,

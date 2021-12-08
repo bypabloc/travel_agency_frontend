@@ -44,7 +44,7 @@
                     :min-date='min' 
                     :max-date='max' 
                     :masks="{
-                        input: 'DD/MM/YYYY HH:mm',
+                        input: 'DD/MM/YYYY',
                     }"
                 >
                     <template v-slot="{ inputValue, inputEvents }">
@@ -135,6 +135,8 @@ export default {
                         start: moment(inputValue.start).startOf('day').format('YYYY-MM-DD HH:mm'),
                         end: moment(inputValue.end).endOf('day').format('YYYY-MM-DD HH:mm'),
                     });
+                }else if(props.type == 'date'){
+                    ctx.emit("update:modelValue", moment(inputValue).startOf('minute').format('YYYY-MM-DD'));
                 }else{
                     ctx.emit("update:modelValue", moment(inputValue).startOf('minute').format('YYYY-MM-DD HH:mm'));
                 }

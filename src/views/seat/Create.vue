@@ -19,7 +19,7 @@
                 <InputText
                     name="seat_x"
                     type="text"
-                    label="X"
+                    label="Número de asiento (columnas) (eje x)"
                     placeholder=""
                     v-model.trim.lazy="formValues.seat_x"
                     :value="formValues.seat_x"
@@ -30,7 +30,7 @@
                 <InputText
                     name="seat_y"
                     type="text"
-                    label="Y"
+                    label="Fila (eje y)"
                     placeholder=""
                     v-model.trim.lazy="formValues.seat_y"
                     :value="formValues.seat_y"

@@ -37,20 +37,23 @@
                                             field: 'id',
                                         },
                                         {
-                                            field: 'seat_x',
-                                            label: 'X',
-                                            type: 'text',
-                                            limit: 10,
+                                            label: 'Asiento',
+                                            field: 'seat',
+                                            type: 'custom',
                                         },
                                         {
-                                            field: 'seat_y',
-                                            label: 'Y',
-                                            type: 'text',
-                                            limit: 10,
+                                            label: 'Cliente',
+                                            field: 'passenger',
+                                            type: 'custom',
                                         },
                                         {
-                                            label: 'Activo',
-                                            field: 'is_active',
+                                            label: 'Viaje',
+                                            field: 'journey_driver',
+                                            type: 'custom',
+                                        },
+                                        {
+                                            label: 'Estado',
+                                            field: 'states',
                                             type: 'custom',
                                         },
                                         {
@@ -68,13 +71,43 @@
                                     :per_page="listParams.per_page"
                                     @update="updateList"
                                 >
-                                    <template v-slot:custom="{ dataRow }">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" :checked="dataRow.is_active" @change="state_change({
-                                                active: $event.target.checked,
-                                                id: dataRow.id,
-                                            })">
+                                    <template v-slot:custom="{ dataRow, dataField, dataFieldExact }">
+                                        <div v-if="dataField == 'seat'">
+                                            <strong>Fila: </strong>{{ dataFieldExact.seat_y }}
+                                            <br>
+                                            <strong>N°: </strong>{{ dataFieldExact.seat_x }}
                                         </div>
+                                        <div v-else-if="dataField == 'passenger'">
+                                            <strong>Documento: </strong>{{ dataFieldExact.document.substring(0,10) }}
+                                            <br>
+                                            <strong>Nombres: </strong>{{ dataFieldExact.names.substring(0,10) }}
+                                            <br>
+                                            <strong>Apellidos: </strong>{{ dataFieldExact.lastname.substring(0,10) }}
+                                        </div>
+                                        <div v-else-if="dataField == 'journey_driver'">
+                                            <strong>Origen: </strong>{{ dataFieldExact.journey.location_origin.name.substring(0,10) }}
+                                            <br>
+                                            <strong>Destino: </strong>{{ dataFieldExact.journey.location_destination.name.substring(0,10) }}
+                                            <br>
+                                            <strong>Fecha de salida: </strong>{{ moment(dataFieldExact.datetime_start+'-00:00').local().add(dataFieldExact.journey.duration_in_seconds, 'seconds').format('DD/MM/YYYY HH:mm:ss') }}
+                                        </div>
+                                        <div v-else-if="dataField == 'states'">
+                                            <select class="form-select" @change="state_change({
+                                                id: dataRow.id,
+                                                states: $event.target.value,
+                                            })">
+                                                <option 
+                                                    :value="item.value"
+                                                    v-for="(item, index) in states" :key="index"
+                                                    :selected="dataFieldExact==item.value"
+                                                >
+                                                    {{ item.text }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div v-else>
+                                            {{ dataFieldExact }}
+                                        </div> 
                                     </template>
                                 </TableCustom>
                                 <PaginationCustom
@@ -97,6 +130,8 @@
 
 <script>
 import { ref, onBeforeMount } from "vue";
+
+import moment from 'moment';
 
 import TableCustom from '@/components/Table.vue'
 import ButtonCustom from '@/components/Button.vue'
@@ -135,10 +170,24 @@ export default {
             getList()
         }
 
-        const state_change = ({id, active}) => {
-            setStateChange({id, active}).then(getList)
-            
+        const state_change = ({id, states}) => {
+            setStateChange({id, states}).then(getList)
         }
+
+        const states = [
+            {
+                value: 1,
+                text: 'Solicitado',
+            },
+            {
+                value: 2,
+                text: 'Pagado',
+            },
+            {
+                value: 3,
+                text: 'Anulado',
+            },
+        ];
 
         return {
             listFetchingData,
@@ -148,6 +197,8 @@ export default {
             updateList,
             getList,
             state_change,
+            moment,
+            states,
         }
     },
 }

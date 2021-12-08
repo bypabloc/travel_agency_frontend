@@ -75,6 +75,7 @@
                                                 text="Ver asientos" 
                                                 icon="eye" 
                                                 @click="modalSeatsToReserveEvent(dataRow)"
+                                                v-if="dataRow.seats"
                                             />
                                         </div>
                                         <div v-else-if="dataField == 'estimated_time'">
@@ -217,7 +218,7 @@ export default {
             `.replace(/ /g,'').replace(/(\r\n|\n|\r)/gm,'');
         }
 
-        const ticketsAvailable = (seats) => (seats.length - seats.map(seat => !seat.available).reduce((old,curr) => curr ? old+1 : old, 0)) + ' / ' + seats.length
+        const ticketsAvailable = (seats) => seats ? ((seats.length - seats.map(seat => !seat.available).reduce((old,curr) => curr ? old+1 : old, 0)) + ' / ' + seats.length) : '0'
 
         const modal_seats_to_reserve = ref(null)
         const modalSeatsToReserveEvent = (e) => {

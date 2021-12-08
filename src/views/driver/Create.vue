@@ -64,9 +64,10 @@
                 <SelectCustom
                     name="bus"
                     type="select"
+                    ref="bus_select"
                     label="Bus"
                     placeholder=""
-                    v-model.trim.lazy="formValues.bus"
+                    v-model="formValues.bus"
                     :value="formValues.bus"
                     :errors="formValuesErrors.bus"
                 />
@@ -162,10 +163,12 @@ export default {
 
         const formValuesErrors = ref({});
 
-        const modal = ref(null)
+        const bus_select = ref(null)
 
+        const modal = ref(null)
         const open = () => {
             modal.value.open({});
+            bus_select.value.reset()
         }
 
         const close = () => {
@@ -214,6 +217,7 @@ export default {
             modal,
             open,
             close,
+            bus_select,
             formValues,
             formValuesErrors,
 

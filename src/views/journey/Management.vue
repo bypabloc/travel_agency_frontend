@@ -64,17 +64,17 @@
                                         {
                                             field: 'quantity_journey_driver',
                                             label: 'Cantidad de viajes',
-                                            type: 'text',
+                                            type: 'custom',
                                         },
                                         {
                                             field: 'quantity_ticket_sold',
                                             label: 'Cantidad de tickets vendidos',
-                                            type: 'text',
+                                            type: 'custom',
                                         },
                                         {
                                             field: 'average_passengers',
                                             label: 'Promedio de pasajeros',
-                                            type: 'text',
+                                            type: 'custom',
                                         },
                                         {
                                             label: 'Activo',
@@ -104,6 +104,15 @@
                                                     id: dataRow.id,
                                                 })">
                                             </div>
+                                        </div>
+                                        <div v-else-if="dataField == 'average_passengers'">
+                                            {{ dataFieldExact || '-' }}
+                                        </div>
+                                        <div v-else-if="dataField == 'quantity_ticket_sold'">
+                                            {{ dataFieldExact || '-' }}
+                                        </div>
+                                        <div v-else-if="dataField == 'quantity_journey_driver'">
+                                            {{ dataFieldExact || '-' }}
                                         </div>
                                         <div v-else>
                                             {{ dataFieldExact }}
