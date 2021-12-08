@@ -44,13 +44,13 @@
                                         },
                                         {
                                             field: 'seat_x',
-                                            label: 'X',
+                                            label: 'Número de asiento (eje x)',
                                             type: 'text',
                                             limit: 10,
                                         },
                                         {
                                             field: 'seat_y',
-                                            label: 'Y',
+                                            label: 'Fila (eje y)',
                                             type: 'text',
                                             limit: 10,
                                         },
