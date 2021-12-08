@@ -66,7 +66,7 @@
                     type="select"
                     label="Bus"
                     placeholder=""
-                    v-model.trim.lazy="formValues.bus"
+                    v-model="formValues.bus"
                     :value="formValues.bus"
                     :errors="formValuesErrors.bus"
                 />
