@@ -18,22 +18,23 @@
             <div class="mb-3">
                 <LocationOriginSelect
                     name="location_origin"
+                    ref="location_origin_select"
                     type="select"
                     label="Salida"
                     placeholder="Salida"
-                    v-model.trim.lazy="formValues.location_origin"
+                    v-model="formValues.location_origin"
                     :value="formValues.location_origin"
                     :errors="formValuesErrors.location_origin"
                 />
             </div>
-
             <div class="mb-3">
                 <LocationDestinationSelect
                     name="location_destination"
+                    ref="location_destination_select"
                     type="select"
                     label="Llegada"
                     placeholder="Llegada"
-                    v-model.trim.lazy="formValues.location_destination"
+                    v-model="formValues.location_destination"
                     :value="formValues.location_destination"
                     :errors="formValuesErrors.location_destination"
                 />
@@ -123,10 +124,15 @@ export default {
 
         const formValuesErrors = ref({});
 
+        const location_origin_select = ref(null)
+        const location_destination_select = ref(null)
+
         const modal = ref(null)
 
         const open = () => {
             modal.value.open({});
+            location_origin_select.value.reset()
+            location_destination_select.value.reset()
         }
 
         const close = () => {
@@ -181,6 +187,9 @@ export default {
             createFetchingData,
 
             createEvent,
+
+            location_origin_select,
+            location_destination_select,
         };
     },
 }

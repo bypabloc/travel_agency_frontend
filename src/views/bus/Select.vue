@@ -1,6 +1,8 @@
 <template>
-    <div class="">
-        <label :for="name" class="form-label">Buses</label>
+    <div class="" :style="{
+            width: '100%',
+        }">
+        <label :for="name" class="form-label">{{ label || 'Buses'  }}</label>
         <div class="input-group mb-3">
             <v-select
                 :options="listData.list"
