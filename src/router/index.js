@@ -32,6 +32,7 @@ if (menu_items.length > 0) {
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
+    
     routes,
 })
 

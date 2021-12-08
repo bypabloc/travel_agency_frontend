@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "devb": "vue-cli-service build --mode development",
-    "devbw": "vue-cli-service serve --mode development --watch ",
+    "devbw": "vue-cli-service build --mode production --watch ",
     "devs": "vue-cli-service serve --mode development",
     "devsw": "vue-cli-service serve --mode development --watch ",
     "build": "vue-cli-service build"
