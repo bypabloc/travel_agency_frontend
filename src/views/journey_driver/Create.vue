@@ -18,6 +18,7 @@
             <div class="mb-3">
                 <JourneySelect
                     name="journey"
+                    ref="journey_select"
                     v-model="formValues.journey"
                     :value="formValues.journey"
                     :errors="formValuesErrors.journey"
@@ -54,8 +55,9 @@
             <div class="mb-3">
                 <DriverSelect
                     name="driver"
+                    ref="driver_select"
                     label="Chofer"
-                    v-model.trim.lazy="formValues.driver"
+                    v-model="formValues.driver"
                     :value="formValues.driver"
                     :errors="formValuesErrors.driver"
                 />
@@ -131,9 +133,13 @@ export default {
         const formValuesErrors = ref({});
 
         const modal = ref(null)
+        const journey_select = ref(null)
+        const driver_select = ref(null)
 
         const open = () => {
             modal.value.open({});
+            journey_select.value.reset()
+            driver_select.value.reset()
         }
 
         const close = () => {
@@ -194,6 +200,9 @@ export default {
             close,
             formValues,
             formValuesErrors,
+
+            journey_select,
+            driver_select,
 
             createErrors,
             createFetchingData,
