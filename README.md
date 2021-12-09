@@ -7,7 +7,11 @@
 ## Comandos para ejecutar el contenedor:
     sudo docker-compose build --no-cache
     sudo docker-compose up -d --build bypabloc_agency_travel_vue
+
+## Para ver las imagenes creadas:
     sudo docker-compose ps
+
+## Para ver los logs de la aplicación:
     sudo docker-compose logs -t -f bypabloc_agency_travel_vue
 
 ## Nota:
