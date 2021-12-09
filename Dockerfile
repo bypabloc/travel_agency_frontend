@@ -1,6 +1,6 @@
 FROM node:16.13.1 as build-stage
 
-WORKDIR /usr/src/app/my-app
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 
