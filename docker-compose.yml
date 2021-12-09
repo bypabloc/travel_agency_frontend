@@ -1,0 +1,15 @@
+version: '3'
+services:
+  bypabloc_agency_travel_vue:
+    build:
+      context: ./my-app
+      dockerfile: Dockerfile-dev
+    ports:
+      - "8080:8080"
+    container_name: bypabloc_agency_travel_vue
+    volumes:
+       - ./my-app:/usr/src/app/my-app
+       - /usr/src/app/my-app/node_modules
+
+# docker-compose up -d --build bypabloc_agency_travel_vue 
+# sudo docker-compose ps
