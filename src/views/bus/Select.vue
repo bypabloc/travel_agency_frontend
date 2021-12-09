@@ -42,7 +42,7 @@
                             type="button" 
                             text="Agregar" 
                             icon="plus" 
-                            @click="createBusModalOpen"
+                            @click="createModalOpen"
                         />
                     </li>
                 </template>
@@ -115,11 +115,10 @@
         </div>
     </div>
 
-    <CreateBusModal
-        ref="create_bus_modal"
+    <CreateModal
+        ref="create_modal"
         @finish_success="reset"
     />
-    
 </template>
 
 <script>
@@ -131,13 +130,13 @@ import useBus from '@/composables/useBus';
 
 import ButtonCustom from '@/components/Button.vue'
 
-import CreateBusModal from '@/views/bus/Create.vue'
+import CreateModal from '@/views/bus/Create.vue'
 
 export default {
     name: 'SelectableInfiniteScroll',
     components: {
         'v-select': vSelect,
-        CreateBusModal,
+        CreateModal,
         ButtonCustom,
     },
     props: {
@@ -255,9 +254,9 @@ export default {
             observer.value.disconnect()
         }
 
-        const create_bus_modal = ref(null);
-        const createBusModalOpen = () => {
-            create_bus_modal.value.open();
+        const create_modal = ref(null);
+        const createModalOpen = () => {
+            create_modal.value.open();
         }
 
         const reset = () => {
@@ -330,8 +329,8 @@ export default {
             listData,
             listErrors,
             inputValue,
-            create_bus_modal,
-            createBusModalOpen,
+            create_modal,
+            createModalOpen,
         };
     },
 };

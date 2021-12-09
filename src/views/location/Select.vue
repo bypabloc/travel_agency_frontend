@@ -34,6 +34,17 @@
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Cargando items...
                     </li>
+                    <li role="option" class="vs__dropdown-option">
+                        <ButtonCustom
+                            :classesNames="{
+                                btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
+                            }" 
+                            type="button" 
+                            text="Agregar" 
+                            icon="plus" 
+                            @click="createModalOpen"
+                        />
+                    </li>
                 </template>
 
                 <template v-slot:no-options>
@@ -67,6 +78,11 @@
             </div>
         </div>
     </div>
+
+    <CreateLocationModal
+        ref="create_modal"
+        @finish_success="reset"
+    />
 </template>
 
 <script>
@@ -76,10 +92,16 @@ import { ref, onMounted, nextTick, computed, onBeforeMount, watch } from 'vue'
 
 import useLocation from '@/composables/useLocation';
 
+import ButtonCustom from '@/components/Button.vue'
+
+import CreateLocationModal from '@/views/location/Create.vue'
+
 export default {
     name: 'SelectableInfiniteScroll',
     components: {
         'v-select': vSelect,
+        CreateLocationModal,
+        ButtonCustom,
     },
     props: {
         type: {
@@ -152,6 +174,8 @@ export default {
                     per_page: limit.value,
                     page: 1,
                     search,
+                    sort_by: 'name',
+                    sort: 'asc',
                     ...props.params,
                 })
                 getList()
@@ -163,6 +187,8 @@ export default {
                 per_page: limit.value,
                 page: 1,
                 search,
+                sort_by: 'name',
+                sort: 'asc',
                 ...props.params,
             })
             getList()
@@ -195,6 +221,8 @@ export default {
                 per_page: limit.value,
                 page: 1,
                 search: e,
+                sort_by: 'name',
+                sort: 'asc',
                 ...props.params,
             })
 
@@ -230,6 +258,11 @@ export default {
             }
         };
 
+        const create_modal = ref(null);
+        const createModalOpen = () => {
+            create_modal.value.open();
+        }
+
         return {
             onChange,
             load,
@@ -241,6 +274,9 @@ export default {
             listErrors,
             reset,
             inputValue,
+
+            create_modal,
+            createModalOpen,
         };
     },
 };

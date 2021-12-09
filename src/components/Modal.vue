@@ -21,6 +21,7 @@
         ref="modal"
         :class="[
             ( size[custom?.size] || '' ),
+            ( show ? 'show' : '' ),
         ]"
         :style="[
             show ? 'display:block;' : 'display:none;',
@@ -58,7 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <slot name="action-close">
-                        <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Cerrar" @click.stop="close">Cerrar</button>
+                        <button type="button" class="btn btn-default" aria-label="Cerrar" @click.stop="close">Cerrar</button>
                     </slot>
                     <slot name="actions"></slot>
                 </div>
@@ -120,7 +121,7 @@ export default {
             this.show = true;
             this.zIndex = this.highZ();
 
-            this.modal.show()
+            // this.modal.show()
         },
         close() {
             this.$emit('close');

@@ -32,6 +32,17 @@
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Cargando items...
                     </li>
+                    <li role="option" class="vs__dropdown-option">
+                        <ButtonCustom
+                            :classesNames="{
+                                btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
+                            }" 
+                            type="button" 
+                            text="Agregar" 
+                            icon="plus" 
+                            @click="createModalOpen"
+                        />
+                    </li>
                 </template>
 
                 <template v-slot:no-options>
@@ -77,6 +88,11 @@
             </div>
         </div>
     </div>
+    
+    <CreatePassengerModal
+        ref="create_modal"
+        @finish_success="reset"
+    />
 </template>
 
 <script>
@@ -84,12 +100,18 @@ import vSelect from 'vue-select'
 
 import { ref, onMounted, nextTick, computed, onBeforeMount, watch } from 'vue'
 
+import CreatePassengerModal from '@/views/passenger/Create.vue'
+
+import ButtonCustom from '@/components/Button.vue'
+
 import usePassenger from '@/composables/usePassenger';
 
 export default {
     name: 'SelectableInfiniteScroll',
     components: {
         'v-select': vSelect,
+        CreatePassengerModal,
+        ButtonCustom,
     },
     props: {
         type: {
@@ -233,6 +255,11 @@ export default {
             }
         };
 
+        const create_modal = ref(null);
+        const createModalOpen = () => {
+            create_modal.value.open();
+        }
+
         return {
             onChange,
             load,
@@ -244,6 +271,9 @@ export default {
             listData,
             listErrors,
             inputValue,
+
+            create_modal,
+            createModalOpen,
         };
     },
 };
