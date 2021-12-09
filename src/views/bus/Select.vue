@@ -34,6 +34,17 @@
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         Cargando items...
                     </li>
+                    <li role="option" class="vs__dropdown-option">
+                        <ButtonCustom
+                            :classesNames="{
+                                btn_custom: 'btn btn-outline-primary d-flex align-items-center gap-2',
+                            }" 
+                            type="button" 
+                            text="Agregar" 
+                            icon="plus" 
+                            @click="createBusModalOpen"
+                        />
+                    </li>
                 </template>
 
                 <template v-slot:no-options>
@@ -103,6 +114,12 @@
             </div>
         </div>
     </div>
+
+    <CreateBusModal
+        ref="create_bus_modal"
+        @finish_success="reset"
+    />
+    
 </template>
 
 <script>
@@ -112,10 +129,16 @@ import { ref, onMounted, nextTick, computed, onBeforeMount, watch } from 'vue'
 
 import useBus from '@/composables/useBus';
 
+import ButtonCustom from '@/components/Button.vue'
+
+import CreateBusModal from '@/views/bus/Create.vue'
+
 export default {
     name: 'SelectableInfiniteScroll',
     components: {
         'v-select': vSelect,
+        CreateBusModal,
+        ButtonCustom,
     },
     props: {
         type: {
@@ -188,11 +211,15 @@ export default {
                     per_page: limit.value,
                     page: 1,
                     search,
+                    sort_by: 'plate',
+                    sort: 'asc',
                     unique_in_drivers: true,
                 }) : setParams({
                     per_page: limit.value,
                     page: 1,
                     search,
+                    sort_by: 'plate',
+                    sort: 'asc',
                 })
                 getList()
             }
@@ -203,10 +230,14 @@ export default {
                 per_page: limit.value,
                 page: 1,
                 search,
+                sort_by: 'plate',
+                sort: 'asc',
                 unique_in_drivers: true,
             }) : setParams({
                 per_page: limit.value,
                 page: 1,
+                sort_by: 'plate',
+                sort: 'asc',
                 search,
             })
             getList()
@@ -224,6 +255,11 @@ export default {
             observer.value.disconnect()
         }
 
+        const create_bus_modal = ref(null);
+        const createBusModalOpen = () => {
+            create_bus_modal.value.open();
+        }
+
         const reset = () => {
             inputValue.value = ''
         }
@@ -239,11 +275,15 @@ export default {
                 per_page: limit.value,
                 page: 1,
                 search: e,
+                sort_by: 'plate',
+                sort: 'asc',
                 unique_in_drivers: true,
             }) : setParams({
                 per_page: limit.value,
                 page: 1,
                 search: e,
+                sort_by: 'plate',
+                sort: 'asc',
             })
 
             try {
@@ -284,11 +324,14 @@ export default {
             reset,
             fetch,
             onOpen,
+            getList,
             onClose,
             hasNextPage,
             listData,
             listErrors,
             inputValue,
+            create_bus_modal,
+            createBusModalOpen,
         };
     },
 };
