@@ -15,10 +15,13 @@
     <div 
         class="modal fade" 
         tabindex="-1" 
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
         aria-hidden="true"
         ref="modal"
         :class="[
             ( size[custom?.size] || '' ),
+            ( show ? 'show' : '' ),
         ]"
         :style="[
             show ? 'display:block;' : 'display:none;',
@@ -45,6 +48,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click.stop="close"></button>
                 </div>
                 <div
+                    ref="body" 
                     class="modal-body"
                     :class="[
                         ( (custom?.bg?.body ? ('bg-'+custom?.bg?.body) : '') ),
@@ -55,10 +59,7 @@
                 </div>
                 <div class="modal-footer">
                     <slot name="action-close">
-                        <button type="button" class="btn btn-default" @click.stop="close">
-                            <i class="fas fa-times"></i>
-                            Cerrar
-                        </button>
+                        <button type="button" class="btn btn-default" aria-label="Cerrar" @click.stop="close">Cerrar</button>
                     </slot>
                     <slot name="actions"></slot>
                 </div>
@@ -120,16 +121,16 @@ export default {
             this.show = true;
             this.zIndex = this.highZ();
 
-            this.modal.show()
+            // this.modal.show()
         },
         close() {
             this.$emit('close');
             this.show = false;
-            this.modal.hide();
+            // this.modal.hide();
         },
         destroy() {
             this.show = false;
-            this.modal.hide();
+            // this.modal.hide();
         },
         highZ(parent, limit) {
             limit = limit || Infinity;
@@ -176,13 +177,16 @@ export default {
         
         this.modal = new Modal(element, {})
         element.addEventListener('hidden.bs.modal', (event) => {
+            console.log('hidden.bs.modal', event)
             // const overlay = this.$refs.overlay
             // overlay.style.display = 'none'
-            this.destroy()
+            // this.destroy()
+            // this.modal.hide();
             this.$emit('close');
         })
-        element.addEventListener('shown.bs.modal', function (event) {
-            // myInput.focus()
+        element.addEventListener('shown.bs.modal', (event) => {
+            this.$refs.body.scrollTop = 0
+            this.$refs.body.querySelector('input').focus()
         })
     },
     
