@@ -10,4 +10,6 @@ EXPOSE 8080
 
 CMD ["npm", "run", "serve"]
 
+# blog guide to config docker https://medium.com/bb-tutorials-and-thoughts/vue-js-local-development-with-docker-compose-275304534f7c
+
 # Config to test production https://www.middlewareinventory.com/blog/docker-vuejs/
