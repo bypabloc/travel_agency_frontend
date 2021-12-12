@@ -1,18 +1,21 @@
 ## Entorno de desarrollo
-    
-    S.O.: Linux Ubuntu 20.04.3 LTS
-    npm version: 8.1.2
-    node version: v16.13.1
 
-## Comandos para instalar todos los paquetes
-    npm install
+### docker --version
+    Docker version 20.10.11, build dea9396
+
+### docker-compose --version
+    docker-compose version 1.27.4, build 40524192
+
+## Comandos para ejecutar el contenedor:
+    sudo docker-compose build --no-cache
+    sudo docker-compose up -d --build bypabloc_agency_travel_vue
+
+## Para ver las imagenes creadas:
+    sudo docker-compose ps
+
+## Para ver los logs de la aplicación:
+    sudo docker-compose logs -t -f bypabloc_agency_travel_vue
 
 ## Nota:
-Por defecto la URL del endpoint es "http://127.0.0.1:8000/api/", si desea especificar una solo debe agregar un archivo ".env" indicando la llave "VUE_ENDPOINT_URL". En la raiz del proyecto hay un archivo ".env.example" con la configuracion por defecto.
-
-## Comando para ejecutar el proyecto, use el que le parezca mas adecuado
-    npm run dev -> para ejecutar el proyecto en modo build y rebuild
-    npm run devbw -> para ejecutar el proyecto en modo build con hot reload
-    npm run devs -> para ejecutar el proyecto en modo server
-    npm run devsw -> para ejecutar el proyecto en modo server con hot reload
-    npm run build -> para ejecutar en modo produccion (build)
+Por defecto la URL del endpoint es "http://127.0.0.1:8080/api/", si desea especificar una solo debe agregar un archivo ".env" indicando la llave "VUE_ENDPOINT_URL". En la raiz del proyecto hay un archivo ".env.example" con la configuracion por defecto.
+Si cambia esta 

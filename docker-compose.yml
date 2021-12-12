@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  bypabloc_agency_travel_vue:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: bypabloc_agency_travel_vue
+    volumes:
+       - ./:/usr/src/app
+       - /usr/src/app/node_modules

@@ -119,12 +119,12 @@
                 </div>
             </div>
         </div>
+        <Create
+            ref="modal_create"
+            @finish_success="getList"
+        />
     </div>
 
-    <Create
-        ref="modal_create"
-        @finish_success="getList"
-    />
 </template>
 
 <script>

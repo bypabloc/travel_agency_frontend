@@ -7,7 +7,8 @@
     "devbw": "vue-cli-service build --mode production --watch ",
     "devs": "vue-cli-service serve --mode development",
     "devsw": "vue-cli-service serve --mode development --watch ",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve"
   },
   "dependencies": {
     "axios": "^0.24.0",
