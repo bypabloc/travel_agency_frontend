@@ -18,4 +18,3 @@
 
 ## Nota:
 Por defecto la URL del endpoint es "http://127.0.0.1:8080/api/", si desea especificar una solo debe agregar un archivo ".env" indicando la llave "VUE_ENDPOINT_URL". En la raiz del proyecto hay un archivo ".env.example" con la configuracion por defecto.
-Si cambia esta 
