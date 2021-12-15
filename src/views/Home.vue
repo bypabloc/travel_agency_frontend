@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <iframe src="https://youtu.be/nFG1bgxaTpw" frameborder="0" scrolling="yes" seamless="seamless" style="display:block; width:100%; height:70vh;"></iframe>
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/nFG1bgxaTpw" scrolling="yes" seamless="seamless" style="display:block; width:100%; height:70vh;" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 </template>
 
